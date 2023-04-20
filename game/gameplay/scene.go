@@ -17,11 +17,9 @@ func CreateWorldScene() *WorldScene {
 		ecs: ecslib.NewECS(world),
 	}
 
-	cell := createCellEntity(s.ecs.World)
-	cellEntry := s.ecs.World.Entry(cell)
-
-	Velocity.Get(cellEntry).x = 1
-	Velocity.Get(cellEntry).y = 1
+	for i := 0; i < 50000; i++ {
+		createCellEntity(s.ecs.World)
+	}
 
 	addSystem(s.ecs)
 
