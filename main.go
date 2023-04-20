@@ -12,9 +12,7 @@ func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Hello, World!")
 
-	g := game.Game{
-		UI: game.CreateGameUI(),
-	}
+	g := game.Game{}
 
 	if err := ebiten.RunGame(&g); err != nil {
 		log.Fatal(err)
