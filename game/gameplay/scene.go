@@ -17,7 +17,8 @@ func CreateWorldScene() *WorldScene {
 		ecs: ecslib.NewECS(world),
 	}
 
-	for i := 0; i < 50000; i++ {
+	createHiveEntity(s.ecs.World)
+	for i := 0; i < 10; i++ {
 		createCellEntity(s.ecs.World)
 	}
 

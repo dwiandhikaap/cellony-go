@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
@@ -32,24 +34,20 @@ func CreateGame() *Game {
 }
 
 var (
-	ScreenWidth  = 640
-	ScreenHeight = 480
+	ScreenWidth  = 1280
+	ScreenHeight = 720
 )
 
 func (g *Game) Update() error {
 	g.sceneManager.Update()
 
-	fps_float64 := ebiten.ActualFPS()
-	fps := int(fps_float64)
-	println(fps)
-
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Hello World!")
-
 	g.sceneManager.Draw(screen)
+	fps := fmt.Sprintf("FPS: %0.2f", ebiten.ActualFPS())
+	ebitenutil.DebugPrint(screen, fps)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
