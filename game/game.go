@@ -8,6 +8,7 @@ import (
 
 	"cellony/game/assets"
 	"cellony/game/gameplay"
+	input "cellony/game/input"
 )
 
 type Game struct {
@@ -39,6 +40,7 @@ var (
 )
 
 func (g *Game) Update() error {
+	input.Update()
 	g.sceneManager.Update()
 
 	return nil

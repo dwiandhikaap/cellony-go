@@ -21,8 +21,8 @@ func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(cellSystem)
 	ecs.AddSystem(cellMovementSystem)
 
-	ecs.AddRenderer(LayerBackground, hiveRenderer)
 	ecs.AddRenderer(LayerBackground, cellRenderer)
+	ecs.AddRenderer(LayerBackground, hiveRenderer)
 }
 
 func cellMovementSystem(ecs *ecs.ECS) {

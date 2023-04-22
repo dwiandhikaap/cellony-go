@@ -36,7 +36,7 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	Position.Get(hiveEntry).y = 720 / 2
 
 	color := graphics.GenerateHiveColor()
-	vs, is := graphics.GeneratePolygonVertices(1280/2, 720/2, color, 128.0, 8, 0.0)
+	vs, is := graphics.GeneratePolygonVertices(1280/2, 720/2, color, 64.0, 8, 0.0)
 
 	Vertices.Get(hiveEntry).vertices = vs
 	Indices.Get(hiveEntry).indices = is
