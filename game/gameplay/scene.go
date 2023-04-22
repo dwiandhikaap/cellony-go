@@ -43,7 +43,12 @@ func (s *WorldScene) Update() error {
 func (s *WorldScene) Draw(screen *ebiten.Image) {
 	s.cam.Surface.Clear()
 	s.ecs.Draw(s.cam.Surface)
-	s.cam.Blit(screen)
+
+	op := &ebiten.DrawImageOptions{}
+	op = s.cam.GetScale(op, cam.Scale, cam.Scale)
+	op = s.cam.GetTranslation(op, 0, 0)
+
+	screen.DrawImage(s.cam.Surface, op)
 }
 
 func (s *WorldScene) Open() {
@@ -62,6 +67,6 @@ func cameraUpdate() {
 		cam.Zoom(0.9)
 	}
 
-	cam.MovePosition(1, 0)
-	cam.Rotate(0.01)
+	x, y := ebiten.CursorPosition()
+	cam.SetPosition(float64(x/100)+1280/2, float64(y/100)+360)
 }
