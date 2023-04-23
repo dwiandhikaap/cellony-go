@@ -81,7 +81,7 @@ func cellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		screen := cam.Surface
 
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(position.x, position.y)
+		op = cam.GetTranslation(op, position.x, position.y)
 		screen.DrawImage(sprite.sprite, op)
 	})
 }
@@ -113,6 +113,19 @@ func hiveRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 
 		op := &ebiten.DrawTrianglesOptions{}
 
-		screen.DrawTriangles(vertices, indices, whiteSubImage, op)
+		translatedVertices := make([]ebiten.Vertex, len(vertices))
+		for i, v := range vertices {
+			translatedVertices[i] = ebiten.Vertex{
+				DstX:   float32(float64(v.DstX) - cam.X + 1280/2/cam.Scale),
+				DstY:   float32(float64(v.DstY) - cam.Y + 720/2/cam.Scale),
+				SrcX:   v.SrcX,
+				SrcY:   v.SrcY,
+				ColorR: v.ColorR,
+				ColorG: v.ColorG,
+				ColorB: v.ColorB,
+				ColorA: v.ColorA,
+			}
+		}
+		screen.DrawTriangles(translatedVertices, indices, whiteSubImage, op)
 	})
 }
