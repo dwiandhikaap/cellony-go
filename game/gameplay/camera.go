@@ -2,6 +2,8 @@ package gameplay
 
 import (
 	"cellony/game/config"
+	"cellony/game/util"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	camera "github.com/melonfunction/ebiten-camera"
@@ -11,6 +13,11 @@ import (
 )
 
 // Separate file for camera ECS
+
+const (
+	minZoom = 0.5
+	maxZoom = 4.0
+)
 
 type CameraData struct {
 	cam *camera.Camera
@@ -63,6 +70,9 @@ func cameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
 	})
 }
 
+var lastMouseX, lastMouseY int
+var isMousePressed bool
+
 func cameraSystem(ecs *ecs.ECS) {
 	query := donburi.NewQuery(
 		filter.Contains(CameraComponent),
@@ -71,18 +81,51 @@ func cameraSystem(ecs *ecs.ECS) {
 	query.Each(ecs.World, func(entry *donburi.Entry) {
 		cam := CameraComponent.Get(entry).cam
 		multiplier := config.Control.CamSpeed
+		cx, cy := ebiten.CursorPosition()
+
+		finalX := cam.X
+		finalY := cam.Y
+		finalZoom := cam.Scale
 
 		_, scrollAmount := ebiten.Wheel()
 		if scrollAmount > 0 {
-			cam.Zoom(1.1)
-		} else if scrollAmount < 0 {
-			cam.Zoom(0.9)
-		}
+			finalZoom = math.Min(cam.Scale*1.1, maxZoom)
 
-		// cam panning like dota
+			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier
+			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
+
+			finalX += dx * 20
+			finalY += dy * 20
+		} else if scrollAmount < 0 {
+			finalZoom = math.Max(cam.Scale*0.9, minZoom)
+
+			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier
+			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
+
+			finalX -= dx * 20
+			finalY -= dy * 20
+		}
+		cam.SetZoom(finalZoom)
+
+		// calculate camera bound
+		minX := config.Video.Width / 2 / finalZoom
+		minY := config.Video.Height / 2 / finalZoom
+
+		maxX := config.Game.Width - minX
+		maxY := config.Game.Height - minY
+
+		// drag cam or cam panning like dota
 		threshold := 40
-		cx, cy := ebiten.CursorPosition()
-		if cx < threshold || cx > int(config.Video.Width)-threshold || cy < threshold || cy > int(config.Video.Height)-threshold {
+		if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+			if !isMousePressed {
+				isMousePressed = true
+			} else {
+				finalX += float64(lastMouseX-cx) / finalZoom
+				finalY += float64(lastMouseY-cy) / finalZoom
+			}
+			lastMouseX = cx
+			lastMouseY = cy
+		} else if cx < threshold || cx > int(config.Video.Width)-threshold || cy < threshold || cy > int(config.Video.Height)-threshold {
 			if ebiten.IsKeyPressed(ebiten.KeyShiftLeft) {
 				multiplier *= 3
 			}
@@ -91,7 +134,15 @@ func cameraSystem(ecs *ecs.ECS) {
 			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
 
 			// move camera
-			cam.MovePosition(dx, dy)
+			finalX += dx
+			finalY += dy
+		} else if !ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+			isMousePressed = false
 		}
+
+		finalX = util.Clamp(finalX, minX, maxX)
+		finalY = util.Clamp(finalY, minY, maxY)
+
+		cam.SetPosition(finalX, finalY)
 	})
 }
