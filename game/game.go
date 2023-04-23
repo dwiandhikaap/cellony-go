@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
 	"cellony/game/assets"
+	"cellony/game/config"
 	"cellony/game/gameplay"
 	input "cellony/game/input"
 )
@@ -17,6 +18,11 @@ type Game struct {
 
 func CreateGame() *Game {
 	err := assets.InitializeAssets()
+	if err != nil {
+		panic(err)
+	}
+
+	err = config.LoadConfig()
 	if err != nil {
 		panic(err)
 	}

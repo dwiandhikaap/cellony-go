@@ -1,0 +1,10 @@
+{
+    "game": {
+      "resolution": [1280, 720],
+      "fieldSize": [2560, 1440]
+    },
+    "control": {
+      "camSpeed": 10,
+      "camSpeedMul": 3
+    }
+  }
