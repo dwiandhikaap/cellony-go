@@ -81,6 +81,11 @@ func cellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		position := Position.Get(entry)
 		screen := cam.Surface
 
+		// Ass looking entity culling algorithm
+		if !(position.x > cam.X-float64(cam.Width)/cam.Scale/2 && position.x < cam.X+float64(cam.Width)/cam.Scale/2 && position.y > cam.Y-float64(cam.Height)/cam.Scale/2 && position.y < cam.Y+float64(cam.Height)/cam.Scale/2) {
+			return
+		}
+
 		op := &ebiten.DrawImageOptions{}
 		op = cam.GetTranslation(op, position.x, position.y)
 		screen.DrawImage(sprite.sprite, op)

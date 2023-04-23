@@ -21,7 +21,7 @@ func CreateWorldScene() *WorldScene {
 	createCameraEntity(s.ecs.World)
 
 	createHiveEntity(s.ecs.World)
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100000; i++ {
 		createCellEntity(s.ecs.World)
 	}
 
