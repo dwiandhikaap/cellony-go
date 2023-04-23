@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"cellony/game/config"
 	"image"
 	"image/color"
 	"math"
@@ -116,8 +117,8 @@ func hiveRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		translatedVertices := make([]ebiten.Vertex, len(vertices))
 		for i, v := range vertices {
 			translatedVertices[i] = ebiten.Vertex{
-				DstX:   float32(float64(v.DstX) - cam.X + 1280/2/cam.Scale),
-				DstY:   float32(float64(v.DstY) - cam.Y + 720/2/cam.Scale),
+				DstX:   float32(float64(v.DstX) - cam.X + float64(config.Video.Width/2)/cam.Scale),
+				DstY:   float32(float64(v.DstY) - cam.Y + float64(config.Video.Height/2)/cam.Scale),
 				SrcX:   v.SrcX,
 				SrcY:   v.SrcY,
 				ColorR: v.ColorR,

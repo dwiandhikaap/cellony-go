@@ -1,6 +1,8 @@
 package gameplay
 
 import (
+	"cellony/game/config"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	camera "github.com/melonfunction/ebiten-camera"
 	"github.com/yohamta/donburi"
@@ -11,8 +13,7 @@ import (
 // Separate file for camera ECS
 
 type CameraData struct {
-	cam   *camera.Camera
-	speed float64
+	cam *camera.Camera
 }
 
 var CameraComponent = donburi.NewComponentType[CameraData]()
@@ -21,7 +22,7 @@ var GlobalCamera *camera.Camera
 var CameraCallStack = []func(*ecs.ECS, *camera.Camera){}
 
 func createCameraEntity(world donburi.World) donburi.Entity {
-	GlobalCamera = camera.NewCamera(1280, 720, 1280/2, 720/2, 0, 1)
+	GlobalCamera = camera.NewCamera(int(config.Video.Width), int(config.Video.Height), config.Video.Width/2, config.Video.Height/2, 0, 1)
 
 	// Destroy any existing camera entities
 	query := donburi.NewQuery(
@@ -36,7 +37,6 @@ func createCameraEntity(world donburi.World) donburi.Entity {
 	cameraData := CameraComponent.Get(world.Entry(cam))
 
 	cameraData.cam = GlobalCamera
-	cameraData.speed = 5
 
 	return cam
 }
@@ -70,7 +70,7 @@ func cameraSystem(ecs *ecs.ECS) {
 
 	query.Each(ecs.World, func(entry *donburi.Entry) {
 		cam := CameraComponent.Get(entry).cam
-		multiplier := CameraComponent.Get(entry).speed
+		multiplier := config.Control.CamSpeed
 
 		_, scrollAmount := ebiten.Wheel()
 		if scrollAmount > 0 {
@@ -82,13 +82,13 @@ func cameraSystem(ecs *ecs.ECS) {
 		// cam panning like dota
 		threshold := 40
 		cx, cy := ebiten.CursorPosition()
-		if cx < threshold || cx > 1280-threshold || cy < threshold || cy > 720-threshold {
+		if cx < threshold || cx > int(config.Video.Width)-threshold || cy < threshold || cy > int(config.Video.Height)-threshold {
 			if ebiten.IsKeyPressed(ebiten.KeyShiftLeft) {
 				multiplier *= 3
 			}
 
-			dx := float64(cx-1280/2) / 1280 * multiplier
-			dy := float64(cy-720/2) / 720 * multiplier
+			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier
+			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
 
 			// move camera
 			cam.MovePosition(dx, dy)

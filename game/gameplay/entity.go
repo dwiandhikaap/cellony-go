@@ -7,6 +7,7 @@ import (
 	"github.com/yohamta/donburi"
 
 	"cellony/game/assets"
+	"cellony/game/config"
 	"cellony/game/graphics"
 )
 
@@ -14,8 +15,8 @@ func createCellEntity(world donburi.World) donburi.Entity {
 	cell := world.Create(Position, Velocity, Speed, Sprite)
 	cellEntry := world.Entry(cell)
 
-	Position.Get(cellEntry).x = rand.Float64() * 1280
-	Position.Get(cellEntry).y = rand.Float64() * 720
+	Position.Get(cellEntry).x = rand.Float64() * float64(config.Video.Width)
+	Position.Get(cellEntry).y = rand.Float64() * float64(config.Video.Height)
 
 	Speed.Get(cellEntry).speed = (rand.Float64() + 1) / 2 * 100
 
@@ -32,11 +33,11 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	hive := world.Create(Position, Vertices, Indices)
 	hiveEntry := world.Entry(hive)
 
-	Position.Get(hiveEntry).x = 1280 / 2
-	Position.Get(hiveEntry).y = 720 / 2
+	Position.Get(hiveEntry).x = config.Video.Width / 2
+	Position.Get(hiveEntry).y = config.Video.Height / 2
 
 	color := graphics.GenerateHiveColor()
-	vs, is := graphics.GeneratePolygonVertices(1280/2, 720/2, color, 64.0, 8, 0.0)
+	vs, is := graphics.GeneratePolygonVertices(float32(config.Video.Width/2), float32(config.Video.Height/2), color, 64.0, 8, 0.0)
 
 	Vertices.Get(hiveEntry).vertices = vs
 	Indices.Get(hiveEntry).indices = is

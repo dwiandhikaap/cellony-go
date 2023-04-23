@@ -8,8 +8,8 @@ import (
 )
 
 type game struct {
-	Resolution []int `json:"resolution"`
-	FieldSize  []int `json:"fieldSize"`
+	Width  float64 `json:"width"`
+	Height float64 `json:"height"`
 }
 
 type control struct {
@@ -17,15 +17,22 @@ type control struct {
 	CamSpeedMul float64 `json:"camSpeedMul"`
 }
 
+type video struct {
+	Width  float64 `json:"width"`
+	Height float64 `json:"height"`
+}
+
 type config struct {
 	Game    game    `json:"game"`
 	Control control `json:"control"`
+	Video   video   `json:"video"`
 }
 
 var cfg config
 
 var Game game
 var Control control
+var Video video
 
 func LoadConfig() error {
 	jsonFile, err := os.Open("config.json")
@@ -40,6 +47,7 @@ func LoadConfig() error {
 
 	Game = cfg.Game
 	Control = cfg.Control
+	Video = cfg.Video
 
 	fmt.Println("Successfully loaded config.json")
 

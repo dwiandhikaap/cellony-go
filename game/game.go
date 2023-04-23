@@ -6,7 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
-	"cellony/game/assets"
 	"cellony/game/config"
 	"cellony/game/gameplay"
 	input "cellony/game/input"
@@ -17,16 +16,6 @@ type Game struct {
 }
 
 func CreateGame() *Game {
-	err := assets.InitializeAssets()
-	if err != nil {
-		panic(err)
-	}
-
-	err = config.LoadConfig()
-	if err != nil {
-		panic(err)
-	}
-
 	ebiten.SetVsyncEnabled(false)
 
 	g := Game{
@@ -39,11 +28,6 @@ func CreateGame() *Game {
 
 	return &g
 }
-
-var (
-	ScreenWidth  = 1280
-	ScreenHeight = 720
-)
 
 func (g *Game) Update() error {
 	input.Update()
@@ -59,5 +43,5 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return ScreenWidth, ScreenHeight
+	return int(config.Video.Width), int(config.Video.Height)
 }
