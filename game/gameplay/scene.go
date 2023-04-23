@@ -46,16 +46,3 @@ func (s *WorldScene) Open() {
 func (s *WorldScene) Close() {
 	s.ecs.Pause()
 }
-
-/* func cameraUpdate() {
-	_, scrollAmount := ebiten.Wheel()
-	if scrollAmount > 0 {
-		cam.Zoom(1.1)
-	} else if scrollAmount < 0 {
-		cam.Zoom(0.9)
-	}
-
-	cam.MovePosition(1, 0)
-	cam.Rotate(0.01)
-}
-*/
