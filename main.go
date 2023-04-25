@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -12,16 +13,23 @@ import (
 	"runtime/pprof"
 
 	"github.com/hajimehoshi/ebiten/v2"
+
+	"time"
 )
 
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+var prof = flag.Int("prof", 30, "enable profiling")
 
 func main() {
 	flag.Parse()
-	if *cpuprofile != "" {
-		f, _ := os.Create(*cpuprofile)
+	if *prof > 0 {
+		// name is current date
+		name := time.Now().Format("2006-01-02_15-04-05")
+		f, _ := os.Create(fmt.Sprintf("profiling/cpu_%s.out", name))
 		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
+
+		go _shutdownTimer(*prof)
+
+		println("Running on profiling mode for", *prof, "seconds")
 	}
 
 	err := assets.InitializeAssets()
@@ -42,4 +50,10 @@ func main() {
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func _shutdownTimer(second int) {
+	time.Sleep(time.Duration(second) * time.Second)
+	pprof.StopCPUProfile()
+	os.Exit(0)
 }
