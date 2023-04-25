@@ -9,6 +9,7 @@ import (
 	"cellony/game"
 	"cellony/game/assets"
 	"cellony/game/config"
+	"cellony/game/util"
 
 	"runtime/pprof"
 
@@ -44,6 +45,9 @@ func main() {
 
 	ebiten.SetWindowSize(int(config.Video.Width), int(config.Video.Height))
 	ebiten.SetWindowTitle("Hello, World!")
+
+	gpu := util.GpuInfo()
+	log.Printf("GPU: %s", gpu)
 
 	g := game.CreateGame()
 
