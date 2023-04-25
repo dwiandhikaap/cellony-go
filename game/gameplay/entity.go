@@ -10,6 +10,7 @@ import (
 	"cellony/game/assets"
 	"cellony/game/config"
 	"cellony/game/graphics"
+	"cellony/game/util"
 
 	noise "github.com/ojrac/opensimplex-go"
 )
@@ -72,7 +73,7 @@ func createMapEntity(world donburi.World) {
 		for j := 0; j < mapHeight; j++ {
 			val := float32(n.Eval2(float64(i)/mapDownscale, float64(j)/mapDownscale))
 			if val > 0.5 {
-				grid[i][j] = (val + 1) / 2
+				grid[i][j] = float32(util.RangeInterpolate(float64(val), 0.5, 1.0, 0.0, 1.0))
 			} else {
 				grid[i][j] = 0.0
 			}

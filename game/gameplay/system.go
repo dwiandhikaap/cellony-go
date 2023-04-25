@@ -1,14 +1,15 @@
 package gameplay
 
 import (
+	"cellony/game/assets"
 	"cellony/game/config"
+	"fmt"
 	"image"
 	"image/color"
 	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	camera "github.com/melonfunction/ebiten-camera"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -86,27 +87,52 @@ func mapSystem(ecs *ecs.ECS) {
 		width := len(grid.grid)
 		height := len(grid.grid[0])
 
+		tileImg := []*ebiten.Image{
+			assets.AssetsInstance.Sprites["wall0"],
+			assets.AssetsInstance.Sprites["wall1"],
+			assets.AssetsInstance.Sprites["wall2"],
+			assets.AssetsInstance.Sprites["wall3"],
+			assets.AssetsInstance.Sprites["wall4"],
+			assets.AssetsInstance.Sprites["wall5"],
+			assets.AssetsInstance.Sprites["wall6"],
+			assets.AssetsInstance.Sprites["wall7"],
+			assets.AssetsInstance.Sprites["wall8"],
+			assets.AssetsInstance.Sprites["wall9"],
+		}
+
+		var tempMax float32 = 0.0
+		var tempMin float32 = 1.0
 		for i := 0; i < width; i++ {
 			for j := 0; j < height; j++ {
 				if !grid.dirtyMask[i][j] {
 					continue
 				}
-
 				val := grid.grid[i][j]
 
-				vector.DrawFilledRect(
-					image.img,
-					float32(i*10),
-					float32(j*10),
-					10,
-					10,
-					color.RGBA{uint8(val * 255), uint8(val * 255), uint8(val * 255), 255},
-					true,
-				)
+				if val <= 0 {
+					continue
+				}
+
+				if tempMax < val {
+					tempMax = val
+				}
+
+				if tempMin > val {
+					tempMin = val
+				}
+
+				op := &ebiten.DrawImageOptions{}
+				op.GeoM.Translate(float64(i*10), float64(j*10))
+
+				index := int(val * 10)
+
+				image.img.DrawImage(tileImg[index], op)
 
 				grid.dirtyMask[i][j] = false
 			}
 		}
+
+		println(fmt.Sprintf("Max: %f, Min: %f", tempMax, tempMin))
 	})
 }
 

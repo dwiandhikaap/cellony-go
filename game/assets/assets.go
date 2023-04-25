@@ -36,6 +36,16 @@ func loadSprites() (map[string]*ebiten.Image, error) {
 	sprite_dicts := map[string]string{
 		"cell":     "assets/image/cell.png",
 		"circle64": "assets/image/circle-64.png",
+		"wall0":    "assets/image/wall-0.png",
+		"wall1":    "assets/image/wall-1.png",
+		"wall2":    "assets/image/wall-2.png",
+		"wall3":    "assets/image/wall-3.png",
+		"wall4":    "assets/image/wall-4.png",
+		"wall5":    "assets/image/wall-5.png",
+		"wall6":    "assets/image/wall-6.png",
+		"wall7":    "assets/image/wall-7.png",
+		"wall8":    "assets/image/wall-8.png",
+		"wall9":    "assets/image/wall-9.png",
 	}
 
 	for name, path := range sprite_dicts {
@@ -52,7 +62,9 @@ func loadSprites() (map[string]*ebiten.Image, error) {
 		}
 
 		// scale image to 8x8
-		image = resize.Resize(8, 8, image, resize.NearestNeighbor)
+		if name == "circle64" {
+			image = resize.Resize(8, 8, image, resize.NearestNeighbor)
+		}
 
 		sprites[name] = ebiten.NewImageFromImage(image)
 	}

@@ -26,3 +26,7 @@ func GpuInfo() (gpu string) {
 	}
 	return
 }
+
+func RangeInterpolate(a float64, aMin float64, aMax float64, bMin float64, bMax float64) float64 {
+	return bMin + (a-aMin)*(bMax-bMin)/(aMax-aMin)
+}

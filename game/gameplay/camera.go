@@ -123,8 +123,6 @@ func cameraSystem(ecs *ecs.ECS) {
 			}
 			lastMouseX = cx
 			lastMouseY = cy
-		} else if !ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
-			isMousePressed = false
 		} else if cx < threshold || cx > int(config.Video.Width)-threshold || cy < threshold || cy > int(config.Video.Height)-threshold {
 			if ebiten.IsKeyPressed(ebiten.KeyShiftLeft) {
 				multiplier *= 3
@@ -136,6 +134,8 @@ func cameraSystem(ecs *ecs.ECS) {
 			// move camera
 			finalX += dx
 			finalY += dy
+		} else if !ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+			isMousePressed = false
 		}
 
 		finalX = util.Clamp(finalX, minX, maxX)
