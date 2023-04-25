@@ -89,16 +89,16 @@ func cameraSystem(ecs *ecs.ECS) {
 		if scrollAmount > 0 {
 			finalZoom = math.Min(cam.Scale*1.1, maxZoom)
 
-			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier
-			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
+			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
+			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
 
 			finalX += dx * 20
 			finalY += dy * 20
 		} else if scrollAmount < 0 {
 			finalZoom = math.Max(cam.Scale*0.9, minZoom)
 
-			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier
-			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier
+			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
+			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
 
 			finalX -= dx * 20
 			finalY -= dy * 20
