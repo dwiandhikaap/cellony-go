@@ -16,8 +16,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"time"
-
-	_ "github.com/silbinarywolf/preferdiscretegpu"
 )
 
 var prof = flag.Int("prof", -1, "enable profiling")
@@ -49,11 +47,16 @@ func main() {
 	ebiten.SetWindowTitle("Hello, World!")
 
 	gpu := util.GpuInfo()
-	log.Printf("GPU: %s", gpu)
 
 	g := game.CreateGame()
 
-	if err := ebiten.RunGame(g); err != nil {
+	runOp := &ebiten.RunGameOptions{}
+	runOp.GraphicsLibrary = util.GetGraphicsLibrary()
+
+	log.Printf("GPU: %s", gpu)
+	log.Printf("Graphics API: %s", runOp.GraphicsLibrary.String())
+
+	if err := ebiten.RunGameWithOptions(g, runOp); err != nil {
 		log.Fatal(err)
 	}
 }

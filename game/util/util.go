@@ -2,6 +2,7 @@ package util
 
 import (
 	"math"
+	"runtime"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jaypipes/ghw"
@@ -31,6 +32,14 @@ func GpuInfo() (gpu string) {
 		}
 	}
 	return
+}
+
+func GetGraphicsLibrary() ebiten.GraphicsLibrary {
+	if runtime.GOOS == "windows" {
+		return ebiten.GraphicsLibraryOpenGL
+	}
+
+	return ebiten.GraphicsLibraryAuto
 }
 
 func RangeInterpolate(a float64, aMin float64, aMax float64, bMin float64, bMax float64) float64 {
