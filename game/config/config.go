@@ -10,7 +10,7 @@ import (
 type game struct {
 	Width    float64 `json:"width"`
 	Height   float64 `json:"height"`
-	MapScale float64 `json:"mapScale"`
+	TileSize float64 `json:"tileSize"`
 }
 
 type control struct {

@@ -51,8 +51,8 @@ func cellCollisionSystem(ecs *ecs.ECS) {
 		cellQuery.Each(ecs.World, func(cellEntry *donburi.Entry) {
 			cellPosition := Position.Get(cellEntry)
 
-			x := int(cellPosition.x / config.Game.MapScale)
-			y := int(cellPosition.y / config.Game.MapScale)
+			x := int(cellPosition.x / config.Game.TileSize)
+			y := int(cellPosition.y / config.Game.TileSize)
 
 			if cellPosition.x >= config.Game.Width ||
 				cellPosition.x < 0 ||
@@ -121,23 +121,23 @@ func mapSystem(ecs *ecs.ECS) {
 		width := len(grid.grid)
 		height := len(grid.grid[0])
 
-		mapScale := int(config.Game.MapScale)
+		tileSize := int(config.Game.TileSize)
 
-		deadWall := ebiten.NewImage(mapScale, mapScale)
+		deadWall := ebiten.NewImage(tileSize, tileSize)
 		deadWall.Fill(color.RGBA{0x00, 0x00, 0x00, 0xff})
 
 		tileImg := []*ebiten.Image{
-			util.ResizeImage(deadWall, mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall0"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall1"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall2"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall3"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall4"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall5"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall6"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall7"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall8"], mapScale, mapScale),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall9"], mapScale, mapScale),
+			util.ResizeImage(deadWall, tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall0"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall1"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall2"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall3"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall4"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall5"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall6"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall7"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall8"], tileSize, tileSize),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall9"], tileSize, tileSize),
 		}
 
 		for i := 0; i < width; i++ {
@@ -148,7 +148,7 @@ func mapSystem(ecs *ecs.ECS) {
 				val := grid.grid[i][j]
 
 				op := &ebiten.DrawImageOptions{}
-				op.GeoM.Translate(float64(i*mapScale), float64(j*mapScale))
+				op.GeoM.Translate(float64(i*tileSize), float64(j*tileSize))
 
 				index := int(val * float32(len(tileImg)-1))
 

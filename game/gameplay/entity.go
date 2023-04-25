@@ -73,7 +73,7 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 		// Outer circle, reduce by 0.1 each steps
 		for i := 0; i < 15; i++ {
 			r := radius * (1.5 + float64(i)*0.1)
-			indices := util.GetCircleLatticeArea(x/config.Game.MapScale, y/config.Game.MapScale, r/config.Game.MapScale)
+			indices := util.GetCircleLatticeArea(x/config.Game.TileSize, y/config.Game.TileSize, r/config.Game.TileSize)
 			delta := 1 / 15.0
 			for _, index := range indices {
 				xIndex := int(index[0])
@@ -92,10 +92,10 @@ func createMapEntity(world donburi.World) {
 	mapEntity := world.Create(Grid, Image)
 	mapEntry := world.Entry(mapEntity)
 
-	mapScale := config.Game.MapScale
+	tileSize := config.Game.TileSize
 
-	mapWidth := int(config.Game.Width / mapScale)
-	mapHeight := int(config.Game.Height / mapScale)
+	mapWidth := int(config.Game.Width / tileSize)
+	mapHeight := int(config.Game.Height / tileSize)
 
 	grid := make([][]float32, mapWidth)
 	dirtyMask := make([][]bool, mapWidth)
@@ -110,7 +110,7 @@ func createMapEntity(world donburi.World) {
 		grid[i] = make([]float32, mapHeight)
 		dirtyMask[i] = make([]bool, mapHeight)
 		for j := 0; j < mapHeight; j++ {
-			val := float32(n.Eval2(float64(i)/mapScale, float64(j)/mapScale))
+			val := float32(n.Eval2(float64(i)/tileSize, float64(j)/tileSize))
 			if val > 0.45 {
 				grid[i][j] = float32(util.RangeInterpolate(float64(val), 0.45, 1.0, 0.0, 1.0))
 			} else {
