@@ -23,6 +23,7 @@ const (
 func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(cameraSystem)
 	ecs.AddSystem(cellSystem)
+	ecs.AddSystem(cellCollisionSystem)
 	ecs.AddSystem(mapSystem)
 	ecs.AddSystem(mapDestroySystem)
 	ecs.AddSystem(cellMovementSystem)
@@ -32,6 +33,39 @@ func addSystem(ecs *ecs.ECS) {
 	addCameraRenderer(hiveRenderer)
 
 	ecs.AddRenderer(LayerBackground, cameraRenderer)
+}
+
+func cellCollisionSystem(ecs *ecs.ECS) {
+	cellQuery := donburi.NewQuery(
+		filter.Contains(Cell),
+	)
+
+	worldQuery := donburi.NewQuery(
+		filter.Contains(Grid),
+	)
+
+	worldQuery.Each(ecs.World, func(worldEntry *donburi.Entry) {
+		grid := Grid.Get(worldEntry)
+
+		cellQuery.Each(ecs.World, func(cellEntry *donburi.Entry) {
+			cellPosition := Position.Get(cellEntry)
+
+			x := int(cellPosition.x / config.Game.MapScale)
+			y := int(cellPosition.y / config.Game.MapScale)
+
+			if cellPosition.x >= config.Game.Width ||
+				cellPosition.x < 0 ||
+				cellPosition.y >= config.Game.Height ||
+				cellPosition.y < 0 {
+				cellEntry.Remove()
+			} else if grid.grid[x][y] > 0 {
+				cellEntry.Remove()
+
+				grid.grid[x][y] -= 0.005
+				grid.dirtyMask[x][y] = true
+			}
+		})
+	})
 }
 
 func cellMovementSystem(ecs *ecs.ECS) {

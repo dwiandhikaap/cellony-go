@@ -40,6 +40,7 @@ type ImageData struct {
 
 // Tags
 var Hive = donburi.NewTag()
+var Cell = donburi.NewTag()
 
 // Components
 var Position = donburi.NewComponentType[PositionData]()

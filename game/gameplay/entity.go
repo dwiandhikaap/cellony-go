@@ -17,7 +17,7 @@ import (
 )
 
 func createCellEntity(world donburi.World) donburi.Entity {
-	cell := world.Create(Position, Velocity, Speed, Sprite)
+	cell := world.Create(Cell, Position, Velocity, Speed, Sprite)
 	cellEntry := world.Entry(cell)
 
 	Position.Get(cellEntry).x = rand.Float64() * float64(config.Game.Width)
