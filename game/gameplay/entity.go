@@ -52,8 +52,13 @@ func createMapEntity(world donburi.World) {
 	mapEntity := world.Create(Grid, Image)
 	mapEntry := world.Entry(mapEntity)
 
-	grid := make([][]float32, int(config.Game.Width/10))
-	dirtyMask := make([][]bool, int(config.Game.Width/10))
+	mapDownscale := 10.0
+
+	mapWidth := int(config.Game.Width / mapDownscale)
+	mapHeight := int(config.Game.Height / mapDownscale)
+
+	grid := make([][]float32, mapWidth)
+	dirtyMask := make([][]bool, mapWidth)
 
 	Grid.Get(mapEntry).grid = grid
 	Grid.Get(mapEntry).dirtyMask = dirtyMask
@@ -61,11 +66,11 @@ func createMapEntity(world donburi.World) {
 
 	n := noise.NewNormalized(1)
 
-	for i := 0; i < int(config.Game.Width/10); i++ {
-		grid[i] = make([]float32, int(config.Game.Height/10))
-		dirtyMask[i] = make([]bool, int(config.Game.Height/10))
-		for j := 0; j < int(config.Game.Height/10); j++ {
-			val := float32(n.Eval2(float64(i)/10, float64(j)/10))
+	for i := 0; i < mapWidth; i++ {
+		grid[i] = make([]float32, mapHeight)
+		dirtyMask[i] = make([]bool, mapHeight)
+		for j := 0; j < mapHeight; j++ {
+			val := float32(n.Eval2(float64(i)/mapDownscale, float64(j)/mapDownscale))
 			if val > 0.5 {
 				grid[i][j] = (val + 1) / 2
 			} else {
