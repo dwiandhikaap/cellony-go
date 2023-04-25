@@ -8,6 +8,7 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	camera "github.com/melonfunction/ebiten-camera"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -22,8 +23,11 @@ const (
 func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(cameraSystem)
 	ecs.AddSystem(cellSystem)
+	ecs.AddSystem(mapSystem)
+	ecs.AddSystem(mapDestroySystem)
 	ecs.AddSystem(cellMovementSystem)
 
+	addCameraRenderer(mapRenderer)
 	addCameraRenderer(cellRenderer)
 	addCameraRenderer(hiveRenderer)
 
@@ -65,6 +69,66 @@ func cellSystem(ecs *ecs.ECS) {
 
 		position.x += velocity.x * 1 / 60
 		position.y += velocity.y * 1 / 60
+	})
+}
+
+func mapSystem(ecs *ecs.ECS) {
+	query := donburi.NewQuery(
+		filter.And(
+			filter.Contains(Grid),
+		),
+	)
+
+	query.Each(ecs.World, func(entry *donburi.Entry) {
+		grid := Grid.Get(entry)
+		image := Image.Get(entry)
+
+		width := len(grid.grid)
+		height := len(grid.grid[0])
+
+		for i := 0; i < width; i++ {
+			for j := 0; j < height; j++ {
+				if !grid.dirtyMask[i][j] {
+					continue
+				}
+
+				val := grid.grid[i][j]
+
+				vector.DrawFilledRect(
+					image.img,
+					float32(i*10),
+					float32(j*10),
+					10,
+					10,
+					color.RGBA{uint8(val * 255), uint8(val * 255), uint8(val * 255), 255},
+					true,
+				)
+
+				grid.dirtyMask[i][j] = false
+			}
+		}
+	})
+}
+
+func mapDestroySystem(ecs *ecs.ECS) {
+	query := donburi.NewQuery(
+		filter.And(
+			filter.Contains(Grid),
+		),
+	)
+
+	query.Each(ecs.World, func(entry *donburi.Entry) {
+		grid := Grid.Get(entry)
+		width := len(grid.grid)
+		height := len(grid.grid[0])
+		// Random tile got deleted
+		if rand.Float32() < 0.1 {
+			// random index
+			i := rand.Intn(width)
+			j := rand.Intn(height)
+			grid.grid[i][j] = 0
+			grid.dirtyMask[i][j] = true
+		}
 	})
 }
 
@@ -133,5 +197,21 @@ func hiveRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 			}
 		}
 		screen.DrawTriangles(translatedVertices, indices, whiteSubImage, op)
+	})
+}
+
+func mapRenderer(ecs *ecs.ECS, cam *camera.Camera) {
+	query := donburi.NewQuery(
+		filter.And(
+			filter.Contains(Grid),
+		),
+	)
+
+	query.Each(ecs.World, func(entry *donburi.Entry) {
+		image := Image.Get(entry)
+
+		op := &ebiten.DrawImageOptions{}
+		op = cam.GetTranslation(op, 0, 0)
+		cam.Surface.DrawImage(image.img, op)
 	})
 }

@@ -19,9 +19,9 @@ func CreateWorldScene() *WorldScene {
 	}
 
 	createCameraEntity(s.ecs.World)
-
+	createMapEntity(s.ecs.World)
 	createHiveEntity(s.ecs.World)
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 5000; i++ {
 		createCellEntity(s.ecs.World)
 	}
 

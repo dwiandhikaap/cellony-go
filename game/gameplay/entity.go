@@ -4,11 +4,14 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
 	"cellony/game/assets"
 	"cellony/game/config"
 	"cellony/game/graphics"
+
+	noise "github.com/ojrac/opensimplex-go"
 )
 
 func createCellEntity(world donburi.World) donburi.Entity {
@@ -43,4 +46,32 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	Indices.Get(hiveEntry).indices = is
 
 	return hive
+}
+
+func createMapEntity(world donburi.World) {
+	mapEntity := world.Create(Grid, Image)
+	mapEntry := world.Entry(mapEntity)
+
+	grid := make([][]float32, int(config.Game.Width/10))
+	dirtyMask := make([][]bool, int(config.Game.Width/10))
+
+	Grid.Get(mapEntry).grid = grid
+	Grid.Get(mapEntry).dirtyMask = dirtyMask
+	Image.Get(mapEntry).img = ebiten.NewImage(int(config.Game.Width), int(config.Game.Height))
+
+	n := noise.NewNormalized(1)
+
+	for i := 0; i < int(config.Game.Width/10); i++ {
+		grid[i] = make([]float32, int(config.Game.Height/10))
+		dirtyMask[i] = make([]bool, int(config.Game.Height/10))
+		for j := 0; j < int(config.Game.Height/10); j++ {
+			val := float32(n.Eval2(float64(i)/10, float64(j)/10))
+			if val > 0.5 {
+				grid[i][j] = (val + 1) / 2
+			} else {
+				grid[i][j] = 0.0
+			}
+			dirtyMask[i][j] = true
+		}
+	}
 }

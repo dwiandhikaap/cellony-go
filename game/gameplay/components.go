@@ -29,6 +29,15 @@ type IndicesData struct {
 	indices []uint16
 }
 
+type GridData struct {
+	grid      [][]float32 // doubles down as grid health
+	dirtyMask [][]bool
+}
+
+type ImageData struct {
+	img *ebiten.Image
+}
+
 // Tags
 var Hive = donburi.NewTag()
 
@@ -39,3 +48,5 @@ var Speed = donburi.NewComponentType[SpeedData]()
 var Sprite = donburi.NewComponentType[SpriteData]()
 var Vertices = donburi.NewComponentType[VerticesData]()
 var Indices = donburi.NewComponentType[IndicesData]()
+var Grid = donburi.NewComponentType[GridData]()
+var Image = donburi.NewComponentType[ImageData]()

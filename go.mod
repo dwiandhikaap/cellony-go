@@ -20,6 +20,7 @@ require (
 	github.com/jezek/xgb v1.1.0 // indirect
 	github.com/melonfunction/ebiten-camera v0.0.0-20220812153034-695003d18a6d // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
+	github.com/ojrac/opensimplex-go v1.0.2 // indirect
 	github.com/quasilyte/ebitengine-input v0.8.0 // indirect
 	github.com/quasilyte/gmath v0.0.0-20221217210116-fba37a2e15c7 // indirect
 	github.com/yohamta/donburi v1.3.6 // indirect
