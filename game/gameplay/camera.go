@@ -60,8 +60,6 @@ func cameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
 	query.Each(ecs.World, func(entry *donburi.Entry) {
 		cam := CameraComponent.Get(entry).cam
 
-		cam.Surface.Clear()
-
 		for _, renderer := range CameraCallStack {
 			renderer(ecs, cam)
 		}
