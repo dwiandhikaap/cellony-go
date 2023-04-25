@@ -1,7 +1,9 @@
 package assets
 
 import (
+	"encoding/json"
 	"image"
+	"io"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -15,7 +17,19 @@ type Assets struct {
 var AssetsInstance *Assets
 
 func InitializeAssets() error {
-	sprites, err := loadSprites()
+	var assetsJson assetsJson
+
+	jsonFile, err := os.Open("assets.json")
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+
+	byteValue, _ := io.ReadAll(jsonFile)
+
+	json.Unmarshal(byteValue, &assetsJson)
+
+	sprites, err := loadSprites(&assetsJson)
 	if err != nil {
 		return err
 	}
@@ -27,31 +41,28 @@ func InitializeAssets() error {
 	return err
 }
 
-func loadSprites() (map[string]*ebiten.Image, error) {
+type assetsJson struct {
+	Image []struct {
+		Name string `json:"name"`
+		Path string `json:"path"`
+		Size struct {
+			Width  int `json:"width"`
+			Height int `json:"height"`
+		} `json:"size"`
+	} `json:"image"`
+	Audio []struct {
+		Name string `json:"name"`
+		Path string `json:"path"`
+	} `json:"audio"`
+}
+
+func loadSprites(assets *assetsJson) (map[string]*ebiten.Image, error) {
 	sprites := make(map[string]*ebiten.Image)
 
-	// create string to string dict for asset name -> asset path
-	// cell -> assets/image/cell.png
-
-	sprite_dicts := map[string]string{
-		"cell":     "assets/image/cell.png",
-		"circle64": "assets/image/circle-64.png",
-		"wall0":    "assets/image/wall-0.png",
-		"wall1":    "assets/image/wall-1.png",
-		"wall2":    "assets/image/wall-2.png",
-		"wall3":    "assets/image/wall-3.png",
-		"wall4":    "assets/image/wall-4.png",
-		"wall5":    "assets/image/wall-5.png",
-		"wall6":    "assets/image/wall-6.png",
-		"wall7":    "assets/image/wall-7.png",
-		"wall8":    "assets/image/wall-8.png",
-		"wall9":    "assets/image/wall-9.png",
-	}
-
-	for name, path := range sprite_dicts {
-		f, err := os.Open(path)
+	for _, img := range assets.Image {
+		f, err := os.Open(img.Path)
 		if err != nil {
-			println("Warning: " + path + " failed to load")
+			println("Warning: " + img.Path + " failed to load")
 			continue
 		}
 		defer f.Close()
@@ -61,12 +72,11 @@ func loadSprites() (map[string]*ebiten.Image, error) {
 			return nil, err
 		}
 
-		// scale image to 8x8
-		if name == "circle64" {
-			image = resize.Resize(8, 8, image, resize.NearestNeighbor)
+		if img.Size.Height > 0 && img.Size.Width > 0 {
+			image = resize.Resize(uint(img.Size.Width), uint(img.Size.Height), image, resize.NearestNeighbor)
 		}
 
-		sprites[name] = ebiten.NewImageFromImage(image)
+		sprites[img.Name] = ebiten.NewImageFromImage(image)
 	}
 
 	return sprites, nil

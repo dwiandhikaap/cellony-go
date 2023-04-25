@@ -22,9 +22,9 @@ func CreateWorldScene() *WorldScene {
 	createMapEntity(s.ecs.World)
 	createHiveEntity(s.ecs.World)
 	createHiveEntity(s.ecs.World)
-	//for i := 0; i < 5000; i++ {
-	//	createCellEntity(s.ecs.World)
-	//}
+	for i := 0; i < 5000; i++ {
+		createCellEntity(s.ecs.World)
+	}
 
 	addSystem(s.ecs)
 

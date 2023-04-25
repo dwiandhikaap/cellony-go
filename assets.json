@@ -1,0 +1,54 @@
+{
+    "image": [
+        {
+            "name": "circle64",
+            "path": "assets/image/circle-64.png",
+            "size": {
+                "width": 8,
+                "height": 8
+            }
+        },
+        {
+            "name": "wall0",
+            "path": "assets/image/wall-0.png"
+        },
+        {
+            "name": "wall1",
+            "path": "assets/image/wall-1.png"
+        },
+        {
+            "name": "wall2",
+            "path": "assets/image/wall-2.png"
+        },
+        {
+            "name": "wall3",
+            "path": "assets/image/wall-3.png"
+        },
+        {
+            "name": "wall4",
+            "path": "assets/image/wall-4.png"
+        },
+        {
+            "name": "wall5",
+            "path": "assets/image/wall-5.png"
+        },
+        {
+            "name": "wall6",
+            "path": "assets/image/wall-6.png"
+        },
+        {
+            "name": "wall7",
+            "path": "assets/image/wall-7.png"
+        },
+        {
+            "name": "wall8",
+            "path": "assets/image/wall-8.png"
+        },
+        {
+            "name": "wall9",
+            "path": "assets/image/wall-9.png"
+        }
+    ],
+    "audio": [
+    ]
+}
