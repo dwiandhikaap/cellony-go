@@ -3,6 +3,7 @@ package gameplay
 import (
 	"cellony/game/assets"
 	"cellony/game/config"
+	util "cellony/game/util"
 	"image"
 	"image/color"
 	"math"
@@ -126,17 +127,17 @@ func mapSystem(ecs *ecs.ECS) {
 		deadWall.Fill(color.RGBA{0x00, 0x00, 0x00, 0xff})
 
 		tileImg := []*ebiten.Image{
-			deadWall,
-			assets.AssetsInstance.Sprites["wall0"],
-			assets.AssetsInstance.Sprites["wall1"],
-			assets.AssetsInstance.Sprites["wall2"],
-			assets.AssetsInstance.Sprites["wall3"],
-			assets.AssetsInstance.Sprites["wall4"],
-			assets.AssetsInstance.Sprites["wall5"],
-			assets.AssetsInstance.Sprites["wall6"],
-			assets.AssetsInstance.Sprites["wall7"],
-			assets.AssetsInstance.Sprites["wall8"],
-			assets.AssetsInstance.Sprites["wall9"],
+			util.ResizeImage(deadWall, mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall0"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall1"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall2"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall3"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall4"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall5"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall6"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall7"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall8"], mapScale, mapScale),
+			util.ResizeImage(assets.AssetsInstance.Sprites["wall9"], mapScale, mapScale),
 		}
 
 		for i := 0; i < width; i++ {
@@ -149,7 +150,7 @@ func mapSystem(ecs *ecs.ECS) {
 				op := &ebiten.DrawImageOptions{}
 				op.GeoM.Translate(float64(i*mapScale), float64(j*mapScale))
 
-				index := int(val * float32(mapScale))
+				index := int(val * float32(len(tileImg)-1))
 
 				image.img.DrawImage(tileImg[index], op)
 

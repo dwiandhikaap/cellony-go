@@ -3,7 +3,9 @@ package util
 import (
 	"math"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jaypipes/ghw"
+	"github.com/nfnt/resize"
 )
 
 func Clamp(a float64, min float64, max float64) float64 {
@@ -51,4 +53,9 @@ func GetCircleLatticeArea(x float64, y float64, radius float64) [][]int {
 	}
 
 	return lattice
+}
+
+func ResizeImage(img *ebiten.Image, w int, h int) *ebiten.Image {
+	image := resize.Resize(uint(w), uint(h), img.SubImage(img.Bounds()), resize.NearestNeighbor)
+	return ebiten.NewImageFromImage(image)
 }
