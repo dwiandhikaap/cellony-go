@@ -3,7 +3,6 @@ package gameplay
 import (
 	"cellony/game/assets"
 	"cellony/game/config"
-	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -100,8 +99,6 @@ func mapSystem(ecs *ecs.ECS) {
 			assets.AssetsInstance.Sprites["wall9"],
 		}
 
-		var tempMax float32 = 0.0
-		var tempMin float32 = 1.0
 		for i := 0; i < width; i++ {
 			for j := 0; j < height; j++ {
 				if !grid.dirtyMask[i][j] {
@@ -111,14 +108,6 @@ func mapSystem(ecs *ecs.ECS) {
 
 				if val <= 0 {
 					continue
-				}
-
-				if tempMax < val {
-					tempMax = val
-				}
-
-				if tempMin > val {
-					tempMin = val
 				}
 
 				op := &ebiten.DrawImageOptions{}
@@ -131,8 +120,6 @@ func mapSystem(ecs *ecs.ECS) {
 				grid.dirtyMask[i][j] = false
 			}
 		}
-
-		println(fmt.Sprintf("Max: %f, Min: %f", tempMax, tempMin))
 	})
 }
 
