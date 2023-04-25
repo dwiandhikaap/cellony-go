@@ -71,14 +71,15 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 		dirtyMask := Grid.Get(entry).dirtyMask
 
 		// Outer circle, reduce by 0.1 each steps
-		for i := 0; i < 10; i++ {
-			indices := util.GetCircleLatticeArea(x, y, radius*(2+float64(i)*0.1))
+		for i := 0; i < 15; i++ {
+			r := radius * (1.5 + float64(i)*0.1)
+			indices := util.GetCircleLatticeArea(x/config.Game.MapScale, y/config.Game.MapScale, r/config.Game.MapScale)
+			delta := 1 / 15.0
 			for _, index := range indices {
-				xIndex := int(index[0] / 10)
-				yIndex := int(index[1] / 10)
+				xIndex := int(index[0])
+				yIndex := int(index[1])
 
-				asd := float64(grid[xIndex][yIndex])
-				grid[xIndex][yIndex] = float32(util.Clamp(asd-0.001, 0.0, 1.0))
+				grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])-delta, 0.0, 1.0))
 				dirtyMask[xIndex][yIndex] = true
 			}
 		}
@@ -91,10 +92,10 @@ func createMapEntity(world donburi.World) {
 	mapEntity := world.Create(Grid, Image)
 	mapEntry := world.Entry(mapEntity)
 
-	mapDownscale := 10.0
+	mapScale := config.Game.MapScale
 
-	mapWidth := int(config.Game.Width / mapDownscale)
-	mapHeight := int(config.Game.Height / mapDownscale)
+	mapWidth := int(config.Game.Width / mapScale)
+	mapHeight := int(config.Game.Height / mapScale)
 
 	grid := make([][]float32, mapWidth)
 	dirtyMask := make([][]bool, mapWidth)
@@ -109,7 +110,7 @@ func createMapEntity(world donburi.World) {
 		grid[i] = make([]float32, mapHeight)
 		dirtyMask[i] = make([]bool, mapHeight)
 		for j := 0; j < mapHeight; j++ {
-			val := float32(n.Eval2(float64(i)/mapDownscale, float64(j)/mapDownscale))
+			val := float32(n.Eval2(float64(i)/mapScale, float64(j)/mapScale))
 			if val > 0.45 {
 				grid[i][j] = float32(util.RangeInterpolate(float64(val), 0.45, 1.0, 0.0, 1.0))
 			} else {

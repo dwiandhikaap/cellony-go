@@ -86,7 +86,9 @@ func mapSystem(ecs *ecs.ECS) {
 		width := len(grid.grid)
 		height := len(grid.grid[0])
 
-		deadWall := ebiten.NewImage(10, 10)
+		mapScale := int(config.Game.MapScale)
+
+		deadWall := ebiten.NewImage(mapScale, mapScale)
 		deadWall.Fill(color.RGBA{0x00, 0x00, 0x00, 0xff})
 
 		tileImg := []*ebiten.Image{
@@ -111,9 +113,9 @@ func mapSystem(ecs *ecs.ECS) {
 				val := grid.grid[i][j]
 
 				op := &ebiten.DrawImageOptions{}
-				op.GeoM.Translate(float64(i*10), float64(j*10))
+				op.GeoM.Translate(float64(i*mapScale), float64(j*mapScale))
 
-				index := int(val * 10)
+				index := int(val * float32(mapScale))
 
 				image.img.DrawImage(tileImg[index], op)
 
