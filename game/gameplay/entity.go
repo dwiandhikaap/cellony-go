@@ -50,8 +50,6 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	x = util.RangeInterpolate(x, 0.0, config.Game.Width, xPadding, float64(config.Game.Width)-xPadding)
 	y = util.RangeInterpolate(y, 0.0, config.Game.Height, yPadding, float64(config.Game.Height)-yPadding)
 
-	println(int(x), int(y))
-
 	Position.Get(hiveEntry).x = x
 	Position.Get(hiveEntry).y = y
 
