@@ -30,6 +30,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/quasilyte/ebitengine-input v0.8.0 // indirect
 	github.com/quasilyte/gmath v0.0.0-20221217210116-fba37a2e15c7 // indirect
+	github.com/silbinarywolf/preferdiscretegpu v1.0.0 // indirect
 	github.com/yohamta/donburi v1.3.6 // indirect
 	golang.org/x/exp v0.0.0-20190731235908-ec7cb31e5a56 // indirect
 	golang.org/x/image v0.6.0 // indirect

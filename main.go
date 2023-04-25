@@ -16,9 +16,11 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"time"
+
+	_ "github.com/silbinarywolf/preferdiscretegpu"
 )
 
-var prof = flag.Int("prof", 30, "enable profiling")
+var prof = flag.Int("prof", -1, "enable profiling")
 
 func main() {
 	flag.Parse()
