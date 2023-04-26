@@ -1,6 +1,9 @@
 package gameplay
 
 import (
+	"cellony/game/gameplay/camera"
+	ent "cellony/game/gameplay/entity"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
@@ -18,10 +21,10 @@ func CreateWorldScene() *WorldScene {
 		ecs: ecslib.NewECS(world),
 	}
 
-	createCameraEntity(s.ecs.World)
-	createMapEntity(s.ecs.World)
-	createHiveEntity(s.ecs.World)
-	createHiveEntity(s.ecs.World)
+	camera.CreateCameraEntity(s.ecs.World)
+	ent.CreateMapEntity(s.ecs.World)
+	ent.CreateHiveEntity(s.ecs.World)
+	ent.CreateHiveEntity(s.ecs.World)
 
 	addSystem(s.ecs)
 

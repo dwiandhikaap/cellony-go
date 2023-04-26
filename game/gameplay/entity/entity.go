@@ -1,4 +1,4 @@
-package gameplay
+package ent
 
 import (
 	"math"
@@ -10,6 +10,7 @@ import (
 
 	"cellony/game/assets"
 	"cellony/game/config"
+	"cellony/game/gameplay/comp"
 	"cellony/game/graphics"
 	"cellony/game/util"
 
@@ -22,26 +23,26 @@ type CreateCellOptions struct {
 	Speed float64
 }
 
-func createCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
-	cell := world.Create(Cell, Position, Velocity, Speed, Sprite)
+func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
+	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite)
 	cellEntry := world.Entry(cell)
 
-	Position.Get(cellEntry).x = options.X
-	Position.Get(cellEntry).y = options.Y
+	comp.Position.Get(cellEntry).X = options.X
+	comp.Position.Get(cellEntry).Y = options.Y
 
-	Speed.Get(cellEntry).speed = options.Speed
+	comp.Speed.Get(cellEntry).Speed = options.Speed
 
 	angle := rand.Float64() * 2 * 3.14159
-	Velocity.Get(cellEntry).x = math.Cos(angle) * Speed.Get(cellEntry).speed
-	Velocity.Get(cellEntry).y = math.Sin(angle) * Speed.Get(cellEntry).speed
+	comp.Velocity.Get(cellEntry).X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
+	comp.Velocity.Get(cellEntry).Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
 
-	Sprite.Get(cellEntry).sprite = assets.AssetsInstance.Sprites["circle64"]
+	comp.Sprite.Get(cellEntry).Sprite = assets.AssetsInstance.Sprites["circle64"]
 
 	return cell
 }
 
-func createHiveEntity(world donburi.World) donburi.Entity {
-	hive := world.Create(Position, Vertices, Indices, Color, Hive)
+func CreateHiveEntity(world donburi.World) donburi.Entity {
+	hive := world.Create(comp.Position, comp.Vertices, comp.Indices, comp.Color, comp.Hive)
 	hiveEntry := world.Entry(hive)
 
 	radius := 64.0
@@ -56,28 +57,28 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	x = util.RangeInterpolate(x, 0.0, config.Game.Width, xPadding, float64(config.Game.Width)-xPadding)
 	y = util.RangeInterpolate(y, 0.0, config.Game.Height, yPadding, float64(config.Game.Height)-yPadding)
 
-	Position.Get(hiveEntry).x = x
-	Position.Get(hiveEntry).y = y
+	comp.Position.Get(hiveEntry).X = x
+	comp.Position.Get(hiveEntry).Y = y
 
 	color := graphics.GenerateHiveColor()
 	vs, is := graphics.GeneratePolygonVertices(float32(x), float32(y), color, radius, 8, 0.0)
 
-	Vertices.Get(hiveEntry).vertices = vs
-	Indices.Get(hiveEntry).indices = is
+	comp.Vertices.Get(hiveEntry).Vertices = vs
+	comp.Indices.Get(hiveEntry).Indices = is
 
 	r, g, b, _ := color.RGBA()
-	Color.Get(hiveEntry).r = uint8(r >> 8)
-	Color.Get(hiveEntry).g = uint8(g >> 8)
-	Color.Get(hiveEntry).b = uint8(b >> 8)
+	comp.Color.Get(hiveEntry).R = uint8(r >> 8)
+	comp.Color.Get(hiveEntry).G = uint8(g >> 8)
+	comp.Color.Get(hiveEntry).B = uint8(b >> 8)
 
 	// adjust map near hive
 	mapQuery := donburi.NewQuery(
-		filter.Contains(Grid),
+		filter.Contains(comp.Grid),
 	)
 
 	mapQuery.Each(world, func(entry *donburi.Entry) {
-		grid := Grid.Get(entry).grid
-		dirtyMask := Grid.Get(entry).dirtyMask
+		grid := comp.Grid.Get(entry).Grid
+		dirtyMask := comp.Grid.Get(entry).DirtyMask
 
 		// Outer circle, reduce by 0.1 each steps
 		for i := 0; i < 15; i++ {
@@ -97,8 +98,8 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 	return hive
 }
 
-func createMapEntity(world donburi.World) {
-	mapEntity := world.Create(Grid, Image)
+func CreateMapEntity(world donburi.World) {
+	mapEntity := world.Create(comp.Grid, comp.Image)
 	mapEntry := world.Entry(mapEntity)
 
 	tileSize := config.Game.TileSize
@@ -109,9 +110,9 @@ func createMapEntity(world donburi.World) {
 	grid := make([][]float32, mapWidth)
 	dirtyMask := make([][]bool, mapWidth)
 
-	Grid.Get(mapEntry).grid = grid
-	Grid.Get(mapEntry).dirtyMask = dirtyMask
-	Image.Get(mapEntry).img = ebiten.NewImage(int(config.Game.Width), int(config.Game.Height))
+	comp.Grid.Get(mapEntry).Grid = grid
+	comp.Grid.Get(mapEntry).DirtyMask = dirtyMask
+	comp.Image.Get(mapEntry).Img = ebiten.NewImage(int(config.Game.Width), int(config.Game.Height))
 
 	n := noise.NewNormalized(1)
 

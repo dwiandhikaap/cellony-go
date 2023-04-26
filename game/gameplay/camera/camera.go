@@ -1,4 +1,4 @@
-package gameplay
+package camera
 
 import (
 	"cellony/game/config"
@@ -28,7 +28,7 @@ var CameraComponent = donburi.NewComponentType[CameraData]()
 var GlobalCamera *camera.Camera
 var CameraCallStack = []func(*ecs.ECS, *camera.Camera){}
 
-func createCameraEntity(world donburi.World) donburi.Entity {
+func CreateCameraEntity(world donburi.World) donburi.Entity {
 	GlobalCamera = camera.NewCamera(int(config.Video.Width), int(config.Video.Height), config.Video.Width/2, config.Video.Height/2, 0, 1)
 
 	// Destroy any existing camera entities
@@ -48,11 +48,11 @@ func createCameraEntity(world donburi.World) donburi.Entity {
 	return cam
 }
 
-func addCameraRenderer(renderer func(*ecs.ECS, *camera.Camera)) {
+func AddCameraRenderer(renderer func(*ecs.ECS, *camera.Camera)) {
 	CameraCallStack = append(CameraCallStack, renderer)
 }
 
-func cameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
+func CameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
 	query := donburi.NewQuery(
 		filter.Contains(CameraComponent),
 	)
@@ -71,7 +71,7 @@ func cameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
 var lastMouseX, lastMouseY int
 var isMousePressed bool
 
-func cameraSystem(ecs *ecs.ECS) {
+func CameraSystem(ecs *ecs.ECS) {
 	query := donburi.NewQuery(
 		filter.Contains(CameraComponent),
 	)

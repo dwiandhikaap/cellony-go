@@ -1,4 +1,4 @@
-package gameplay
+package comp
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
@@ -6,48 +6,48 @@ import (
 )
 
 type PositionData struct {
-	x, y float64
+	X, Y float64
 }
 
 type VelocityData struct {
-	x, y float64
+	X, Y float64
 }
 
 type SpeedData struct {
-	speed float64
+	Speed float64
 }
 
 type SpriteData struct {
-	sprite *ebiten.Image
+	Sprite *ebiten.Image
 }
 
 type VerticesData struct {
-	vertices []ebiten.Vertex
+	Vertices []ebiten.Vertex
 }
 
 type IndicesData struct {
-	indices []uint16
+	Indices []uint16
 }
 
 type GridData struct {
-	grid      [][]float32 // doubles down as grid health
-	dirtyMask [][]bool
+	Grid      [][]float32 // doubles down as grid health
+	DirtyMask [][]bool
 }
 
 type ImageData struct {
-	img *ebiten.Image
+	Img *ebiten.Image
 }
 
 type ColorData struct {
-	r uint8
-	g uint8
-	b uint8
+	R uint8
+	G uint8
+	B uint8
 }
 
 type HiveData struct {
-	spawnCooldown  float64
-	spawnCount     int
-	spawnCountdown float64
+	SpawnCooldown  float64
+	SpawnCount     int
+	SpawnCountdown float64
 }
 
 // Tags
