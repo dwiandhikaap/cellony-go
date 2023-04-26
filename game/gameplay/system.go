@@ -25,6 +25,7 @@ func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(cameraSystem)
 	ecs.AddSystem(cellSystem)
 	ecs.AddSystem(cellCollisionSystem)
+	ecs.AddSystem(hiveSystem)
 	ecs.AddSystem(mapSystem)
 	ecs.AddSystem(mapDestroySystem)
 	ecs.AddSystem(cellMovementSystem)
@@ -62,7 +63,7 @@ func cellCollisionSystem(ecs *ecs.ECS) {
 			} else if grid.grid[x][y] > 0 {
 				cellEntry.Remove()
 
-				grid.grid[x][y] -= 0.005
+				grid.grid[x][y] -= 0.1
 				grid.dirtyMask[x][y] = true
 			}
 		})
@@ -219,6 +220,24 @@ var (
 
 func init() {
 	whiteImage.Fill(color.White)
+}
+
+func hiveSystem(ecs *ecs.ECS) {
+	query := donburi.NewQuery(
+		filter.Contains(Hive),
+	)
+
+	query.Each(ecs.World, func(entry *donburi.Entry) {
+		cx := Position.Get(entry).x
+		cy := Position.Get(entry).y
+
+		op := &CreateCellOptions{
+			X:     cx,
+			Y:     cy,
+			Speed: 50,
+		}
+		createCellEntity(ecs.World, op)
+	})
 }
 
 func hiveRenderer(ecs *ecs.ECS, cam *camera.Camera) {

@@ -16,14 +16,20 @@ import (
 	noise "github.com/ojrac/opensimplex-go"
 )
 
-func createCellEntity(world donburi.World) donburi.Entity {
+type CreateCellOptions struct {
+	X     float64
+	Y     float64
+	Speed float64
+}
+
+func createCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
 	cell := world.Create(Cell, Position, Velocity, Speed, Sprite)
 	cellEntry := world.Entry(cell)
 
-	Position.Get(cellEntry).x = rand.Float64() * float64(config.Game.Width)
-	Position.Get(cellEntry).y = rand.Float64() * float64(config.Game.Height)
+	Position.Get(cellEntry).x = options.X
+	Position.Get(cellEntry).y = options.Y
 
-	Speed.Get(cellEntry).speed = (rand.Float64() + 1) / 2 * 100
+	Speed.Get(cellEntry).speed = options.Speed
 
 	angle := rand.Float64() * 2 * 3.14159
 	Velocity.Get(cellEntry).x = math.Cos(angle) * Speed.Get(cellEntry).speed
@@ -35,7 +41,7 @@ func createCellEntity(world donburi.World) donburi.Entity {
 }
 
 func createHiveEntity(world donburi.World) donburi.Entity {
-	hive := world.Create(Position, Vertices, Indices)
+	hive := world.Create(Position, Vertices, Indices, Color, Hive)
 	hiveEntry := world.Entry(hive)
 
 	radius := 64.0
@@ -58,6 +64,11 @@ func createHiveEntity(world donburi.World) donburi.Entity {
 
 	Vertices.Get(hiveEntry).vertices = vs
 	Indices.Get(hiveEntry).indices = is
+
+	r, g, b, _ := color.RGBA()
+	Color.Get(hiveEntry).r = uint8(r >> 8)
+	Color.Get(hiveEntry).g = uint8(g >> 8)
+	Color.Get(hiveEntry).b = uint8(b >> 8)
 
 	// adjust map near hive
 	mapQuery := donburi.NewQuery(

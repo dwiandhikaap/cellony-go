@@ -14,9 +14,9 @@ func GeneratePolygonVertices(cx float32, cy float32, color color.Color, radius f
 
 	r, g, b, _ := color.RGBA()
 	var (
-		r1 = r / 255
-		g1 = g / 255
-		b1 = b / 255
+		r1 = (r + 1) / 256
+		g1 = (g + 1) / 256
+		b1 = (b + 1) / 256
 	)
 
 	h, s, l := colorutil.RgbToHsl(float64(r1), float64(g1), float64(b1))
@@ -27,9 +27,9 @@ func GeneratePolygonVertices(cx float32, cy float32, color color.Color, radius f
 		DstY:   cy,
 		SrcX:   0,
 		SrcY:   0,
-		ColorR: float32(r1) / 255,
-		ColorG: float32(g1) / 255,
-		ColorB: float32(b1) / 255,
+		ColorR: (float32(r1) + 1) / 256,
+		ColorG: (float32(g1) + 1) / 256,
+		ColorB: (float32(b1) + 1) / 256,
 		ColorA: 1,
 	})
 

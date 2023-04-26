@@ -38,8 +38,19 @@ type ImageData struct {
 	img *ebiten.Image
 }
 
+type ColorData struct {
+	r uint8
+	g uint8
+	b uint8
+}
+
+type HiveData struct {
+	spawnCooldown  float64
+	spawnCount     int
+	spawnCountdown float64
+}
+
 // Tags
-var Hive = donburi.NewTag()
 var Cell = donburi.NewTag()
 
 // Components
@@ -47,7 +58,9 @@ var Position = donburi.NewComponentType[PositionData]()
 var Velocity = donburi.NewComponentType[VelocityData]()
 var Speed = donburi.NewComponentType[SpeedData]()
 var Sprite = donburi.NewComponentType[SpriteData]()
+var Color = donburi.NewComponentType[ColorData]()
 var Vertices = donburi.NewComponentType[VerticesData]()
 var Indices = donburi.NewComponentType[IndicesData]()
 var Grid = donburi.NewComponentType[GridData]()
 var Image = donburi.NewComponentType[ImageData]()
+var Hive = donburi.NewComponentType[HiveData]()
