@@ -10,6 +10,7 @@ import (
 	"cellony/game/assets"
 	"cellony/game/config"
 	"cellony/game/util"
+	"cellony/generator"
 
 	"runtime/pprof"
 
@@ -19,6 +20,7 @@ import (
 )
 
 var prof = flag.Int("prof", -1, "enable profiling")
+var generateTexture = flag.String("generateTexture", "", "generate texture shades")
 
 func main() {
 	flag.Parse()
@@ -31,6 +33,11 @@ func main() {
 		go _shutdownTimer(*prof)
 
 		println("Running on profiling mode for", *prof, "seconds")
+	}
+
+	if *generateTexture != "" {
+		generator.GenerateTextureShades(*generateTexture, 10)
+		os.Exit(0)
 	}
 
 	err := assets.InitializeAssets()

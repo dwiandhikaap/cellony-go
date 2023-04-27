@@ -47,6 +47,46 @@
         {
             "name": "wall9",
             "path": "assets/image/wall-9.png"
+        },
+        {
+            "name": "food0",
+            "path": "assets/image/food-0.png"
+        },
+        {
+            "name": "food1",
+            "path": "assets/image/food-1.png"
+        },
+        {
+            "name": "food2",
+            "path": "assets/image/food-2.png"
+        },
+        {
+            "name": "food3",
+            "path": "assets/image/food-3.png"
+        },
+        {
+            "name": "food4",
+            "path": "assets/image/food-4.png"
+        },
+        {
+            "name": "food5",
+            "path": "assets/image/food-5.png"
+        },
+        {
+            "name": "food6",
+            "path": "assets/image/food-6.png"
+        },
+        {
+            "name": "food7",
+            "path": "assets/image/food-7.png"
+        },
+        {
+            "name": "food8",
+            "path": "assets/image/food-8.png"
+        },
+        {
+            "name": "food9",
+            "path": "assets/image/food-9.png"
         }
     ],
     "audio": [

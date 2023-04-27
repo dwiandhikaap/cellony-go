@@ -8,6 +8,7 @@ require (
 	github.com/PerformLine/go-stockutil v1.9.3 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/ebitengine/purego v0.3.0 // indirect
 	github.com/ebitenui/ebitenui v0.4.4 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
