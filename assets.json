@@ -10,83 +10,103 @@
         },
         {
             "name": "wall0",
-            "path": "assets/image/wall-0.png"
+            "path": "assets/image/wall-0.png",
+            "type": "tile"
         },
         {
             "name": "wall1",
-            "path": "assets/image/wall-1.png"
+            "path": "assets/image/wall-1.png",
+            "type": "tile"
         },
         {
             "name": "wall2",
-            "path": "assets/image/wall-2.png"
+            "path": "assets/image/wall-2.png",
+            "type": "tile"
         },
         {
             "name": "wall3",
-            "path": "assets/image/wall-3.png"
+            "path": "assets/image/wall-3.png",
+            "type": "tile"
         },
         {
             "name": "wall4",
-            "path": "assets/image/wall-4.png"
+            "path": "assets/image/wall-4.png",
+            "type": "tile"
         },
         {
             "name": "wall5",
-            "path": "assets/image/wall-5.png"
+            "path": "assets/image/wall-5.png",
+            "type": "tile"
         },
         {
             "name": "wall6",
-            "path": "assets/image/wall-6.png"
+            "path": "assets/image/wall-6.png",
+            "type": "tile"
         },
         {
             "name": "wall7",
-            "path": "assets/image/wall-7.png"
+            "path": "assets/image/wall-7.png",
+            "type": "tile"
         },
         {
             "name": "wall8",
-            "path": "assets/image/wall-8.png"
+            "path": "assets/image/wall-8.png",
+            "type": "tile"
         },
         {
             "name": "wall9",
-            "path": "assets/image/wall-9.png"
+            "path": "assets/image/wall-9.png",
+            "type": "tile"
         },
         {
             "name": "food0",
-            "path": "assets/image/food-0.png"
+            "path": "assets/image/food-0.png",
+            "type": "tile"
         },
         {
             "name": "food1",
-            "path": "assets/image/food-1.png"
+            "path": "assets/image/food-1.png",
+            "type": "tile"
         },
         {
             "name": "food2",
-            "path": "assets/image/food-2.png"
+            "path": "assets/image/food-2.png",
+            "type": "tile"
         },
         {
             "name": "food3",
-            "path": "assets/image/food-3.png"
+            "path": "assets/image/food-3.png",
+            "type": "tile"
         },
         {
             "name": "food4",
-            "path": "assets/image/food-4.png"
+            "path": "assets/image/food-4.png",
+            "type": "tile"
         },
         {
             "name": "food5",
-            "path": "assets/image/food-5.png"
+            "path": "assets/image/food-5.png",
+            "type": "tile"
         },
         {
             "name": "food6",
-            "path": "assets/image/food-6.png"
+            "path": "assets/image/food-6.png",
+            "type": "tile"
         },
         {
             "name": "food7",
-            "path": "assets/image/food-7.png"
+            "path": "assets/image/food-7.png",
+            "type": "tile"
         },
         {
             "name": "food8",
-            "path": "assets/image/food-8.png"
+            "path": "assets/image/food-8.png",
+            "type": "tile"
         },
         {
             "name": "food9",
-            "path": "assets/image/food-9.png"
+            "path": "assets/image/food-9.png",
+            "type": "tile"
         }
     ],
     "audio": [

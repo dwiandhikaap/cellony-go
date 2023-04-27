@@ -1,6 +1,7 @@
 package assets
 
 import (
+	"cellony/game/config"
 	"encoding/json"
 	"image"
 	"io"
@@ -49,6 +50,7 @@ type assetsJson struct {
 			Width  int `json:"width"`
 			Height int `json:"height"`
 		} `json:"size"`
+		Type string `json:"type,omitempty"`
 	} `json:"image"`
 	Audio []struct {
 		Name string `json:"name"`
@@ -72,7 +74,9 @@ func loadSprites(assets *assetsJson) (map[string]*ebiten.Image, error) {
 			return nil, err
 		}
 
-		if img.Size.Height > 0 && img.Size.Width > 0 {
+		if img.Type == "tile" {
+			image = resize.Resize(uint(config.Game.TileSize), uint(config.Game.TileSize), image, resize.NearestNeighbor)
+		} else if img.Size.Height > 0 && img.Size.Width > 0 {
 			image = resize.Resize(uint(img.Size.Width), uint(img.Size.Height), image, resize.NearestNeighbor)
 		}
 
