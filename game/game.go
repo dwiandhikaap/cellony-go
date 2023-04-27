@@ -9,6 +9,7 @@ import (
 	"cellony/game/config"
 	"cellony/game/gameplay"
 	input "cellony/game/input"
+	"cellony/game/menu"
 )
 
 type Game struct {
@@ -21,6 +22,7 @@ func CreateGame() *Game {
 	g := Game{
 		sceneManager: SceneManager{
 			scenes: []Scene{
+				menu.CreateMenuScene(),
 				gameplay.CreateWorldScene(),
 			},
 		},
