@@ -11,7 +11,7 @@ import (
 
 	"cellony/game/assets"
 	"cellony/game/config"
-	"cellony/game/gameplay/comp"
+	comp "cellony/game/gameplay/component"
 	"cellony/game/graphics"
 	"cellony/game/util"
 

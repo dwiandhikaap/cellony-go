@@ -2,7 +2,7 @@ package system
 
 import (
 	"cellony/game/config"
-	"cellony/game/gameplay/comp"
+	comp "cellony/game/gameplay/component"
 	ent "cellony/game/gameplay/entity"
 	"image"
 	"image/color"
