@@ -13,6 +13,64 @@ import (
 	"github.com/yohamta/donburi/filter"
 )
 
+func CellAISystem(ecs *ecs.ECS) {
+	cellQuery := donburi.NewQuery(
+		filter.Contains(comp.Cell),
+	)
+
+	worldQuery := donburi.NewQuery(
+		filter.Contains(comp.Grid),
+	)
+
+	worldQuery.Each(ecs.World, func(worldEntry *donburi.Entry) {
+		grid := comp.Grid.Get(worldEntry)
+
+		cellQuery.Each(ecs.World, func(cellEntry *donburi.Entry) {
+			pos := comp.Position.Get(cellEntry)
+			vel := comp.Velocity.Get(cellEntry)
+
+			activity := comp.CellActivity.Get(cellEntry).Activity
+
+			// Randomly change direction
+			if rand.Float32() < 0.01 {
+				angle := rand.Float64() * 2 * 3.14159
+
+				velocity := comp.Velocity.Get(cellEntry)
+				velocity.X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
+				velocity.Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
+			}
+
+			nextX := int((pos.X + vel.X/30 + config.Game.TileSize/2) / config.Game.TileSize)
+			nextY := int((pos.Y + vel.Y/30 + config.Game.TileSize/2) / config.Game.TileSize)
+
+			// Check if cell is going towards a wall
+			for nextX >= int(config.Game.Width/config.Game.TileSize) ||
+				nextX < 0 ||
+				nextY >= int(config.Game.Height/config.Game.TileSize) ||
+				nextY < 0 ||
+				grid.Grid[nextX][nextY] > 0 {
+				// If cell is mining, stop
+				if activity == comp.Mining {
+					vel.X = 0
+					vel.Y = 0
+					break
+				}
+				angle := rand.Float64() * 2 * 3.14159
+
+				vel.X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
+				vel.Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
+
+				nextX = int((pos.X + vel.X/30 + config.Game.TileSize/2) / config.Game.TileSize)
+				nextY = int((pos.Y + vel.Y/30 + config.Game.TileSize/2) / config.Game.TileSize)
+			}
+
+			// Set cell new position
+			pos.X += vel.X * 1 / 60
+			pos.Y += vel.Y * 1 / 60
+		})
+	})
+}
+
 func CellCollisionSystem(ecs *ecs.ECS) {
 	cellQuery := donburi.NewQuery(
 		filter.Contains(comp.Cell),
@@ -43,44 +101,6 @@ func CellCollisionSystem(ecs *ecs.ECS) {
 				grid.DirtyMask[x][y] = true
 			}
 		})
-	})
-}
-
-func CellMovementSystem(ecs *ecs.ECS) {
-	query := donburi.NewQuery(
-		filter.And(
-			filter.Contains(comp.Position),
-			filter.Contains(comp.Velocity),
-			filter.Contains(comp.Speed),
-		),
-	)
-
-	query.Each(ecs.World, func(entry *donburi.Entry) {
-		// random chance to change direction
-		if rand.Float32() < 0.01 {
-			angle := rand.Float64() * 2 * 3.14159
-
-			velocity := comp.Velocity.Get(entry)
-			velocity.X = math.Cos(angle) * comp.Speed.Get(entry).Speed
-			velocity.Y = math.Sin(angle) * comp.Speed.Get(entry).Speed
-		}
-	})
-}
-
-func CellSystem(ecs *ecs.ECS) {
-	query := donburi.NewQuery(
-		filter.And(
-			filter.Contains(comp.Position),
-			filter.Contains(comp.Velocity),
-		),
-	)
-
-	query.Each(ecs.World, func(entry *donburi.Entry) {
-		position := comp.Position.Get(entry)
-		velocity := comp.Velocity.Get(entry)
-
-		position.X += velocity.X * 1 / 60
-		position.Y += velocity.Y * 1 / 60
 	})
 }
 

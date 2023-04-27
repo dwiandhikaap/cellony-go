@@ -13,6 +13,20 @@ type VelocityData struct {
 	X, Y float64
 }
 
+type Activity uint8
+
+const (
+	Wandering Activity = iota
+	Delivering
+	Attacking
+	Fleeing
+	Mining
+)
+
+type CellActivityData struct {
+	Activity Activity
+}
+
 type SpeedData struct {
 	Speed float64
 }
@@ -60,6 +74,7 @@ var Cell = donburi.NewTag()
 // Components
 var Position = donburi.NewComponentType[PositionData]()
 var Velocity = donburi.NewComponentType[VelocityData]()
+var CellActivity = donburi.NewComponentType[CellActivityData]()
 var Speed = donburi.NewComponentType[SpeedData]()
 var Sprite = donburi.NewComponentType[SpriteData]()
 var Color = donburi.NewComponentType[ColorData]()

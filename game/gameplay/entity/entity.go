@@ -19,21 +19,24 @@ import (
 )
 
 type CreateCellOptions struct {
-	X      float64
-	Y      float64
-	Speed  float64
-	Color  color.Color
-	HiveID donburi.Entity
+	X        float64
+	Y        float64
+	Speed    float64
+	Color    color.Color
+	HiveID   donburi.Entity
+	Activity comp.Activity
 }
 
 func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
-	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite, comp.Parent)
+	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite, comp.Parent, comp.CellActivity)
 	cellEntry := world.Entry(cell)
 
 	comp.Position.Get(cellEntry).X = options.X
 	comp.Position.Get(cellEntry).Y = options.Y
 
 	comp.Speed.Get(cellEntry).Speed = options.Speed
+
+	comp.CellActivity.Get(cellEntry).Activity = options.Activity
 
 	angle := rand.Float64() * 2 * 3.14159
 	comp.Velocity.Get(cellEntry).X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
