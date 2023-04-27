@@ -4,7 +4,6 @@ import (
 	"cellony/game/assets"
 	"cellony/game/config"
 	comp "cellony/game/gameplay/component"
-	"cellony/game/util"
 	"image/color"
 	"math/rand"
 
@@ -34,18 +33,30 @@ func MapSystem(ecs *ecs.ECS) {
 		deadWall := ebiten.NewImage(tileSize, tileSize)
 		deadWall.Fill(color.RGBA{0x00, 0x00, 0x00, 0xff})
 
-		tileImg := []*ebiten.Image{
-			util.ResizeImage(deadWall, tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall0"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall1"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall2"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall3"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall4"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall5"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall6"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall7"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall8"], tileSize, tileSize),
-			util.ResizeImage(assets.AssetsInstance.Sprites["wall9"], tileSize, tileSize),
+		wallImgs := []*ebiten.Image{
+			assets.AssetsInstance.Sprites["wall0"],
+			assets.AssetsInstance.Sprites["wall1"],
+			assets.AssetsInstance.Sprites["wall2"],
+			assets.AssetsInstance.Sprites["wall3"],
+			assets.AssetsInstance.Sprites["wall4"],
+			assets.AssetsInstance.Sprites["wall5"],
+			assets.AssetsInstance.Sprites["wall6"],
+			assets.AssetsInstance.Sprites["wall7"],
+			assets.AssetsInstance.Sprites["wall8"],
+			assets.AssetsInstance.Sprites["wall9"],
+		}
+
+		foodImgs := []*ebiten.Image{
+			assets.AssetsInstance.Sprites["food0"],
+			assets.AssetsInstance.Sprites["food1"],
+			assets.AssetsInstance.Sprites["food2"],
+			assets.AssetsInstance.Sprites["food3"],
+			assets.AssetsInstance.Sprites["food4"],
+			assets.AssetsInstance.Sprites["food5"],
+			assets.AssetsInstance.Sprites["food6"],
+			assets.AssetsInstance.Sprites["food7"],
+			assets.AssetsInstance.Sprites["food8"],
+			assets.AssetsInstance.Sprites["food9"],
 		}
 
 		for i := 0; i < width; i++ {
@@ -58,9 +69,15 @@ func MapSystem(ecs *ecs.ECS) {
 				op := &ebiten.DrawImageOptions{}
 				op.GeoM.Translate(float64(i*tileSize), float64(j*tileSize))
 
-				index := int(val * float32(len(tileImg)-1))
+				index := int(val * float32(len(wallImgs)-1))
 
-				image.Img.DrawImage(tileImg[index], op)
+				if val <= 0 {
+					image.Img.DrawImage(deadWall, op)
+				} else if grid.TypeMask[i][j] {
+					image.Img.DrawImage(wallImgs[index], op)
+				} else {
+					image.Img.DrawImage(foodImgs[index], op)
+				}
 
 				grid.DirtyMask[i][j] = false
 			}

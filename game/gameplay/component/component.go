@@ -46,6 +46,7 @@ type IndicesData struct {
 type GridData struct {
 	Grid      [][]float32 // doubles down as grid health
 	DirtyMask [][]bool
+	TypeMask  [][]bool // true if wall, false if food
 }
 
 type ImageData struct {

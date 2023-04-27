@@ -138,16 +138,18 @@ func CreateMapEntity(world donburi.World) {
 
 	comp.Grid.Get(mapEntry).Grid = grid
 	comp.Grid.Get(mapEntry).DirtyMask = dirtyMask
+	comp.Grid.Get(mapEntry).TypeMask = typeMask
 	comp.Image.Get(mapEntry).Img = ebiten.NewImage(int(config.Game.Width), int(config.Game.Height))
 
-	n := noise.NewNormalized(1)
+	terrainNoise := noise.NewNormalized(1)
+	foodNoise := noise.NewNormalized(2)
 
 	for i := 0; i < mapWidth; i++ {
 		grid[i] = make([]float32, mapHeight)
 		dirtyMask[i] = make([]bool, mapHeight)
 		typeMask[i] = make([]bool, mapHeight)
 		for j := 0; j < mapHeight; j++ {
-			val := float32(n.Eval2(float64(i)/tileSize, float64(j)/tileSize))
+			val := float32(terrainNoise.Eval2(float64(i)/tileSize, float64(j)/tileSize))
 			if val > 0.45 {
 				grid[i][j] = float32(util.RangeInterpolate(float64(val), 0.45, 1.0, 0.0, 1.0))
 			} else {
@@ -155,6 +157,19 @@ func CreateMapEntity(world donburi.World) {
 			}
 			dirtyMask[i][j] = true
 			typeMask[i][j] = true
+		}
+	}
+
+	for i := 0; i < mapWidth; i++ {
+		for j := 0; j < mapHeight; j++ {
+			val := float32(foodNoise.Eval2(float64(i)/tileSize, float64(j)/tileSize))
+			if val > 0.8 {
+				gridValue := float32(util.RangeInterpolate(float64(val), 0.5, 1.0, 0.0, 1.0))
+				grid[i][j] = (grid[i][j]*0.25 + gridValue*1.75) / 2.0
+
+				dirtyMask[i][j] = true
+				typeMask[i][j] = false
+			}
 		}
 	}
 }
