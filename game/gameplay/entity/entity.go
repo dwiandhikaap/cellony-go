@@ -51,7 +51,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	tintOp.ColorScale.SetR(float32(r) / 65535)
 	tintOp.ColorScale.SetG(float32(g) / 65535)
 	tintOp.ColorScale.SetB(float32(b) / 65535)
-	tintOp.ColorScale.SetA(0.75)
+	tintOp.ColorScale.SetA(1)
 
 	cellImage.DrawImage(assets.AssetsInstance.Sprites["circle64"], tintOp)
 
@@ -134,6 +134,7 @@ func CreateMapEntity(world donburi.World) {
 
 	grid := make([][]float32, mapWidth)
 	dirtyMask := make([][]bool, mapWidth)
+	typeMask := make([][]bool, mapWidth)
 
 	comp.Grid.Get(mapEntry).Grid = grid
 	comp.Grid.Get(mapEntry).DirtyMask = dirtyMask
@@ -144,6 +145,7 @@ func CreateMapEntity(world donburi.World) {
 	for i := 0; i < mapWidth; i++ {
 		grid[i] = make([]float32, mapHeight)
 		dirtyMask[i] = make([]bool, mapHeight)
+		typeMask[i] = make([]bool, mapHeight)
 		for j := 0; j < mapHeight; j++ {
 			val := float32(n.Eval2(float64(i)/tileSize, float64(j)/tileSize))
 			if val > 0.45 {
@@ -152,6 +154,7 @@ func CreateMapEntity(world donburi.World) {
 				grid[i][j] = 0.0
 			}
 			dirtyMask[i][j] = true
+			typeMask[i][j] = true
 		}
 	}
 }
