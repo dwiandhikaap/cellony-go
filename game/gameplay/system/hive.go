@@ -32,6 +32,15 @@ func HiveSystem(ecs *ecs.ECS) {
 	)
 
 	query.Each(ecs.World, func(entry *donburi.Entry) {
+		hive := comp.Hive.Get(entry)
+
+		if hive.SpawnCountdown > 0 {
+			hive.SpawnCountdown -= 1.0 / 60
+			return
+		}
+
+		hive.SpawnCountdown = hive.SpawnCooldown
+
 		cx := comp.Position.Get(entry).X
 		cy := comp.Position.Get(entry).Y
 
@@ -48,7 +57,10 @@ func HiveSystem(ecs *ecs.ECS) {
 			Color:  cellColor,
 			HiveID: entry.Entity(),
 		}
-		ent.CreateCellEntity(ecs.World, op)
+
+		for i := 0; i < hive.SpawnCount; i++ {
+			ent.CreateCellEntity(ecs.World, op)
+		}
 	})
 }
 

@@ -65,6 +65,10 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 
 	radius := 64.0
 
+	comp.Hive.Get(hiveEntry).SpawnCooldown = 1
+	comp.Hive.Get(hiveEntry).SpawnCountdown = 0
+	comp.Hive.Get(hiveEntry).SpawnCount = 15
+
 	x := rand.Float64() * float64(config.Game.Width)
 	y := rand.Float64() * float64(config.Game.Height)
 
