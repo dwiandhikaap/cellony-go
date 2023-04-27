@@ -50,6 +50,10 @@ type HiveData struct {
 	SpawnCountdown float64
 }
 
+type ParentData struct {
+	Id donburi.Entity
+}
+
 // Tags
 var Cell = donburi.NewTag()
 
@@ -64,3 +68,4 @@ var Indices = donburi.NewComponentType[IndicesData]()
 var Grid = donburi.NewComponentType[GridData]()
 var Image = donburi.NewComponentType[ImageData]()
 var Hive = donburi.NewComponentType[HiveData]()
+var Parent = donburi.NewComponentType[ParentData]()

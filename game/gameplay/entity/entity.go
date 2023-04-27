@@ -1,6 +1,7 @@
 package ent
 
 import (
+	"image/color"
 	"math"
 	"math/rand"
 
@@ -18,13 +19,15 @@ import (
 )
 
 type CreateCellOptions struct {
-	X     float64
-	Y     float64
-	Speed float64
+	X      float64
+	Y      float64
+	Speed  float64
+	Color  color.Color
+	HiveID donburi.Entity
 }
 
 func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
-	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite)
+	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite, comp.Parent)
 	cellEntry := world.Entry(cell)
 
 	comp.Position.Get(cellEntry).X = options.X
@@ -36,7 +39,22 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	comp.Velocity.Get(cellEntry).X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
 	comp.Velocity.Get(cellEntry).Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
 
-	comp.Sprite.Get(cellEntry).Sprite = assets.AssetsInstance.Sprites["circle64"]
+	cellImage := ebiten.NewImage(8, 8)
+	cellImage.Clear()
+
+	r, g, b, _ := options.Color.RGBA()
+
+	tintOp := &ebiten.DrawImageOptions{}
+	tintOp.ColorScale.SetR(float32(r) / 65535)
+	tintOp.ColorScale.SetG(float32(g) / 65535)
+	tintOp.ColorScale.SetB(float32(b) / 65535)
+	tintOp.ColorScale.SetA(0.75)
+
+	cellImage.DrawImage(assets.AssetsInstance.Sprites["circle64"], tintOp)
+
+	comp.Sprite.Get(cellEntry).Sprite = cellImage
+
+	comp.Parent.Get(cellEntry).Id = options.HiveID
 
 	return cell
 }

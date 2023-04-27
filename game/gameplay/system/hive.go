@@ -35,10 +35,18 @@ func HiveSystem(ecs *ecs.ECS) {
 		cx := comp.Position.Get(entry).X
 		cy := comp.Position.Get(entry).Y
 
+		hiveColor := comp.Color.Get(entry)
+		cellColor := color.RGBA{}
+		cellColor.R = hiveColor.R
+		cellColor.G = hiveColor.G
+		cellColor.B = hiveColor.B
+
 		op := &ent.CreateCellOptions{
-			X:     cx,
-			Y:     cy,
-			Speed: 50,
+			X:      cx,
+			Y:      cy,
+			Speed:  50,
+			Color:  cellColor,
+			HiveID: entry.Entity(),
 		}
 		ent.CreateCellEntity(ecs.World, op)
 	})
