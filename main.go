@@ -40,12 +40,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	err := assets.InitializeAssets()
+	err := config.LoadConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	err = config.LoadConfig()
+	err = assets.InitializeAssets()
 	if err != nil {
 		panic(err)
 	}
