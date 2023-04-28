@@ -63,8 +63,9 @@ func main() {
 	log.Printf("GPU: %s", gpu)
 	log.Printf("Graphics API: %s", runOp.GraphicsLibrary.String())
 
-	if err := ebiten.RunGameWithOptions(g, runOp); err != nil {
-		log.Fatal(err)
+	err = ebiten.RunGameWithOptions(g, runOp)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
