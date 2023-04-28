@@ -1,6 +1,14 @@
 {
     "image": [
         {
+            "name": "brand-wide.png",
+            "path": "assets/image/brand-wide.png"
+        },
+        {
+            "name": "brand-logo.png",
+            "path": "assets/image/brand-logo.png"
+        },
+        {
             "name": "circle64",
             "path": "assets/image/circle-64.png",
             "size": {
@@ -110,5 +118,8 @@
         }
     ],
     "audio": [
+    ],
+    "fonts": [
+        "assets/font/FallingSkyCondensed.otf"
     ]
 }
