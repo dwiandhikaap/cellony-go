@@ -10,22 +10,28 @@ import (
 	"cellony/game/gameplay"
 	input "cellony/game/input"
 	"cellony/game/menu"
+	"cellony/game/scene"
 )
 
 type Game struct {
-	sceneManager SceneManager
+	sceneManager *scene.SceneManager
 }
 
 func CreateGame() *Game {
 	ebiten.SetVsyncEnabled(false)
 
+	sceneManager := scene.SceneManager{
+		Scenes: []scene.Scene{},
+	}
+
+	menuScene := menu.CreateMenuScene(&sceneManager)
+	gameplayScene := gameplay.CreateWorldScene()
+
+	sceneManager.Scenes = append(sceneManager.Scenes, menuScene)
+	sceneManager.Scenes = append(sceneManager.Scenes, gameplayScene)
+
 	g := Game{
-		sceneManager: SceneManager{
-			scenes: []Scene{
-				menu.CreateMenuScene(),
-				gameplay.CreateWorldScene(),
-			},
-		},
+		sceneManager: &sceneManager,
 	}
 
 	return &g

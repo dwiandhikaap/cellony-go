@@ -1,6 +1,8 @@
 package menu
 
 import (
+	"cellony/game/scene"
+
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -8,9 +10,9 @@ type MenuScene struct {
 	menu *Menu
 }
 
-func CreateMenuScene() *MenuScene {
+func CreateMenuScene(sceneManager *scene.SceneManager) *MenuScene {
 	return &MenuScene{
-		menu: NewMenu(),
+		menu: NewMenu(sceneManager),
 	}
 }
 

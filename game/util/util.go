@@ -68,3 +68,23 @@ func ResizeImage(img *ebiten.Image, w int, h int) *ebiten.Image {
 	image := resize.Resize(uint(w), uint(h), img.SubImage(img.Bounds()), resize.NearestNeighbor)
 	return ebiten.NewImageFromImage(image)
 }
+
+func FilePathToName(path string) string {
+	name := path
+	for i := len(path) - 1; i >= 0; i-- {
+		if path[i] == '/' {
+			name = path[i+1:]
+			break
+		}
+	}
+
+	// Remove extension
+	for i := len(name) - 1; i >= 0; i-- {
+		if name[i] == '.' {
+			name = name[:i]
+			break
+		}
+	}
+
+	return name
+}
