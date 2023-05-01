@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"cellony/game/gameplay/camera"
+	comp "cellony/game/gameplay/component"
 	ent "cellony/game/gameplay/entity"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -21,10 +22,18 @@ func CreateWorldScene() *WorldScene {
 		ecs: ecslib.NewECS(world),
 	}
 
-	camera.CreateCameraEntity(s.ecs.World)
+	playerCam := camera.CreateCameraEntity(s.ecs.World)
 	ent.CreateMapEntity(s.ecs.World)
+	playerHive := ent.CreateHiveEntity(s.ecs.World)
 	ent.CreateHiveEntity(s.ecs.World)
-	ent.CreateHiveEntity(s.ecs.World)
+
+	playerHiveEntry := world.Entry(playerHive)
+	playerCamEntry := world.Entry(playerCam)
+
+	playerHivePos := comp.Position.Get(playerHiveEntry)
+	playerCamData := camera.CameraComponent.Get(playerCamEntry)
+	playerCamData.Cam.X = playerHivePos.X
+	playerCamData.Cam.Y = playerHivePos.Y
 
 	addSystem(s.ecs)
 

@@ -20,7 +20,7 @@ const (
 )
 
 type CameraData struct {
-	cam *camera.Camera
+	Cam *camera.Camera
 }
 
 var CameraComponent = donburi.NewComponentType[CameraData]()
@@ -43,7 +43,7 @@ func CreateCameraEntity(world donburi.World) donburi.Entity {
 	cam := world.Create(CameraComponent)
 	cameraData := CameraComponent.Get(world.Entry(cam))
 
-	cameraData.cam = GlobalCamera
+	cameraData.Cam = GlobalCamera
 
 	return cam
 }
@@ -58,7 +58,7 @@ func CameraRenderer(ecs *ecs.ECS, screen *ebiten.Image) {
 	)
 
 	query.Each(ecs.World, func(entry *donburi.Entry) {
-		cam := CameraComponent.Get(entry).cam
+		cam := CameraComponent.Get(entry).Cam
 
 		for _, renderer := range CameraCallStack {
 			renderer(ecs, cam)
@@ -77,7 +77,7 @@ func CameraSystem(ecs *ecs.ECS) {
 	)
 
 	query.Each(ecs.World, func(entry *donburi.Entry) {
-		cam := CameraComponent.Get(entry).cam
+		cam := CameraComponent.Get(entry).Cam
 		multiplier := config.Control.CamSpeed
 		cx, cy := ebiten.CursorPosition()
 
