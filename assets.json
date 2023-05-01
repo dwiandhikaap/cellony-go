@@ -17,6 +17,10 @@
             }
         },
         {
+            "name": "phero",
+            "path": "assets/image/phero.png"
+        },
+        {
             "name": "wall0",
             "path": "assets/image/wall-0.png",
             "type": "tile"

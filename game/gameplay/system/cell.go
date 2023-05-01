@@ -3,6 +3,7 @@ package system
 import (
 	"cellony/game/config"
 	comp "cellony/game/gameplay/component"
+	ent "cellony/game/gameplay/entity"
 	"math"
 	"math/rand"
 
@@ -67,6 +68,21 @@ func CellAISystem(ecs *ecs.ECS) {
 			// Set cell new position
 			pos.X += vel.X * 1 / 60
 			pos.Y += vel.Y * 1 / 60
+
+			// Update internal cell clock
+			cellData := comp.Cell.Get(cellEntry)
+			cellData.PheromoneTimer = cellData.PheromoneTimer - (1.0 / 60)
+			if cellData.PheromoneTimer < 0 {
+				ent.CreatePheromoneEntity(ecs.World, &ent.CreatePheromoneOptions{
+					X:         pos.X,
+					Y:         pos.Y,
+					Activity:  activity,
+					HiveID:    comp.Parent.Get(cellEntry).Id,
+					Intensity: 1,
+				})
+
+				cellData.PheromoneTimer = cellData.PheromoneCooldown
+			}
 		})
 	})
 }
@@ -112,21 +128,34 @@ func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		),
 	)
 
-	query.Each(ecs.World, func(entry *donburi.Entry) {
-		sprite := comp.Sprite.Get(entry)
-		position := comp.Position.Get(entry)
-		screen := cam.Surface
+	for zIndex := uint8(0); zIndex < 8; zIndex++ {
+		query.Each(ecs.World, func(entry *donburi.Entry) {
+			sprite := comp.Sprite.Get(entry)
 
-		// Ass looking entity culling algorithm
-		if !(position.X > (cam.X-4)-float64(cam.Width)/cam.Scale/2 &&
-			position.X < (cam.X+4)+float64(cam.Width)/cam.Scale/2 &&
-			position.Y > (cam.Y-4)-float64(cam.Height)/cam.Scale/2 &&
-			position.Y < (cam.Y+4)+float64(cam.Height)/cam.Scale/2) {
-			return
-		}
+			if sprite.Z != zIndex {
+				return
+			}
 
-		op := &ebiten.DrawImageOptions{}
-		op = cam.GetTranslation(op, position.X, position.Y)
-		screen.DrawImage(sprite.Sprite, op)
-	})
+			position := comp.Position.Get(entry)
+			screen := cam.Surface
+
+			// Ass looking entity culling algorithm
+			if !(position.X > (cam.X-4)-float64(cam.Width)/cam.Scale/2 &&
+				position.X < (cam.X+4)+float64(cam.Width)/cam.Scale/2 &&
+				position.Y > (cam.Y-4)-float64(cam.Height)/cam.Scale/2 &&
+				position.Y < (cam.Y+4)+float64(cam.Height)/cam.Scale/2) {
+				return
+			}
+
+			scale := sprite.Scale
+			opacity := sprite.Opacity
+
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(scale, scale)
+			op.ColorScale.ScaleAlpha(float32(opacity))
+
+			op = cam.GetTranslation(op, position.X, position.Y)
+			screen.DrawImage(sprite.Sprite, op)
+		})
+	}
 }

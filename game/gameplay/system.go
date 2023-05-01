@@ -18,6 +18,7 @@ func addSystem(ecs *ecs.ECS) {
 	//ecs.AddSystem(system.CellCollisionSystem)
 	ecs.AddSystem(system.HiveSystem)
 	ecs.AddSystem(system.MapSystem)
+	ecs.AddSystem(system.PheromoneSystem)
 	//ecs.AddSystem(system.MapDestroySystem)
 
 	camera.AddCameraRenderer(system.MapRenderer)

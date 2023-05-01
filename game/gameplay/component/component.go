@@ -31,8 +31,16 @@ type SpeedData struct {
 	Speed float64
 }
 
+type ClockData struct {
+	Time     float64
+	Cooldown float64
+}
+
 type SpriteData struct {
-	Sprite *ebiten.Image
+	Sprite  *ebiten.Image
+	Z       uint8
+	Scale   float64
+	Opacity float64
 }
 
 type VerticesData struct {
@@ -69,8 +77,18 @@ type ParentData struct {
 	Id donburi.Entity
 }
 
-// Tags
-var Cell = donburi.NewTag()
+type PheromoneData struct {
+	Age          float64
+	Intensity    float64
+	MaxIntensity float64
+	HiveID       donburi.Entity
+	Activity     Activity
+}
+
+type CellData struct {
+	PheromoneTimer    float64
+	PheromoneCooldown float64
+}
 
 // Components
 var Position = donburi.NewComponentType[PositionData]()
@@ -85,3 +103,5 @@ var Grid = donburi.NewComponentType[GridData]()
 var Image = donburi.NewComponentType[ImageData]()
 var Hive = donburi.NewComponentType[HiveData]()
 var Parent = donburi.NewComponentType[ParentData]()
+var Pheromone = donburi.NewComponentType[PheromoneData]()
+var Cell = donburi.NewComponentType[CellData]()

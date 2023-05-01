@@ -1,6 +1,7 @@
 package ent
 
 import (
+	"fmt"
 	"image/color"
 	"math"
 	"math/rand"
@@ -25,10 +26,12 @@ type CreateCellOptions struct {
 	Color    color.Color
 	HiveID   donburi.Entity
 	Activity comp.Activity
+
+	PheromoneCooldown float64
 }
 
 func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
-	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Sprite, comp.Parent, comp.CellActivity)
+	cell := world.Create(comp.Cell, comp.Position, comp.Velocity, comp.Speed, comp.Parent, comp.CellActivity, comp.Sprite)
 	cellEntry := world.Entry(cell)
 
 	comp.Position.Get(cellEntry).X = options.X
@@ -38,26 +41,39 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 
 	comp.CellActivity.Get(cellEntry).Activity = options.Activity
 
+	comp.Parent.Get(cellEntry).Id = options.HiveID
+
 	angle := rand.Float64() * 2 * 3.14159
 	comp.Velocity.Get(cellEntry).X = math.Cos(angle) * comp.Speed.Get(cellEntry).Speed
 	comp.Velocity.Get(cellEntry).Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
 
-	cellImage := ebiten.NewImage(8, 8)
-	cellImage.Clear()
+	// assets key = "circle{hiveID}"
+	assetsKey := fmt.Sprintf("circle%d", options.HiveID)
+	cellImage := assets.AssetsInstance.Sprites[assetsKey]
+	if assets.AssetsInstance.Sprites[assetsKey] == nil {
+		cellImage = ebiten.NewImage(8, 8)
+		cellImage.Clear()
 
-	r, g, b, _ := options.Color.RGBA()
+		r, g, b, _ := options.Color.RGBA()
 
-	tintOp := &ebiten.DrawImageOptions{}
-	tintOp.ColorScale.SetR(float32(r) / 65535)
-	tintOp.ColorScale.SetG(float32(g) / 65535)
-	tintOp.ColorScale.SetB(float32(b) / 65535)
-	tintOp.ColorScale.SetA(1)
+		tintOp := &ebiten.DrawImageOptions{}
+		tintOp.ColorScale.SetR(float32(r) / 65535)
+		tintOp.ColorScale.SetG(float32(g) / 65535)
+		tintOp.ColorScale.SetB(float32(b) / 65535)
+		tintOp.ColorScale.SetA(1)
 
-	cellImage.DrawImage(assets.AssetsInstance.Sprites["circle64"], tintOp)
+		cellImage.DrawImage(assets.AssetsInstance.Sprites["circle64"], tintOp)
+
+		assets.AssetsInstance.Sprites[assetsKey] = cellImage
+	}
 
 	comp.Sprite.Get(cellEntry).Sprite = cellImage
+	comp.Sprite.Get(cellEntry).Z = 1
+	comp.Sprite.Get(cellEntry).Scale = 1
+	comp.Sprite.Get(cellEntry).Opacity = 1
 
-	comp.Parent.Get(cellEntry).Id = options.HiveID
+	comp.Cell.Get(cellEntry).PheromoneCooldown = options.PheromoneCooldown
+	comp.Cell.Get(cellEntry).PheromoneTimer = options.PheromoneCooldown
 
 	return cell
 }
@@ -70,7 +86,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 
 	comp.Hive.Get(hiveEntry).SpawnCooldown = 1
 	comp.Hive.Get(hiveEntry).SpawnCountdown = 0
-	comp.Hive.Get(hiveEntry).SpawnCount = 15
+	comp.Hive.Get(hiveEntry).SpawnCount = 3
 
 	x := rand.Float64() * float64(config.Game.Width)
 	y := rand.Float64() * float64(config.Game.Height)
@@ -86,7 +102,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 	comp.Position.Get(hiveEntry).Y = y
 
 	color := graphics.GenerateHiveColor()
-	vs, is := graphics.GeneratePolygonVertices(float32(x), float32(y), color, radius, 8, 0.0)
+	vs, is := graphics.GeneratePolygonVertices(float32(x), float32(y), color, radius, 16, 0.0)
 
 	comp.Vertices.Get(hiveEntry).Vertices = vs
 	comp.Indices.Get(hiveEntry).Indices = is
@@ -172,4 +188,62 @@ func CreateMapEntity(world donburi.World) {
 			}
 		}
 	}
+}
+
+type CreatePheromoneOptions struct {
+	X         float64
+	Y         float64
+	HiveID    donburi.Entity
+	Intensity float64
+	Activity  comp.Activity
+}
+
+func CreatePheromoneEntity(world donburi.World, options *CreatePheromoneOptions) donburi.Entity {
+	pheromone := world.Create(comp.Position, comp.Pheromone, comp.Sprite)
+	pheromoneEntry := world.Entry(pheromone)
+
+	comp.Position.Get(pheromoneEntry).X = options.X
+	comp.Position.Get(pheromoneEntry).Y = options.Y
+	comp.Pheromone.Get(pheromoneEntry).HiveID = options.HiveID
+	comp.Pheromone.Get(pheromoneEntry).Activity = options.Activity
+	comp.Pheromone.Get(pheromoneEntry).Intensity = options.Intensity
+	comp.Pheromone.Get(pheromoneEntry).MaxIntensity = options.Intensity
+	comp.Pheromone.Get(pheromoneEntry).Activity = options.Activity
+
+	assetsKey := fmt.Sprintf("phero-%d-%d", options.HiveID, options.Activity)
+	pheroImage := assets.AssetsInstance.Sprites[assetsKey]
+	if assets.AssetsInstance.Sprites[assetsKey] == nil {
+		pheroImage = ebiten.NewImage(16, 16)
+		pheroImage.Clear()
+
+		hiveQuery := donburi.NewQuery(
+			filter.Contains(comp.Hive),
+		)
+
+		var colorData comp.ColorData
+
+		hiveQuery.Each(world, func(entry *donburi.Entry) {
+			if entry.Entity() != options.HiveID {
+				return
+			}
+			colorData = *comp.Color.Get(entry)
+		})
+
+		tintOp := &ebiten.DrawImageOptions{}
+		tintOp.ColorScale.SetR(float32(colorData.R) / 255)
+		tintOp.ColorScale.SetG(float32(colorData.G) / 255)
+		tintOp.ColorScale.SetB(float32(colorData.B) / 255)
+		tintOp.ColorScale.SetA(1)
+
+		pheroImage.DrawImage(assets.AssetsInstance.Sprites["phero"], tintOp)
+
+		assets.AssetsInstance.Sprites[assetsKey] = pheroImage
+	}
+
+	comp.Sprite.Get(pheromoneEntry).Sprite = pheroImage
+	comp.Sprite.Get(pheromoneEntry).Z = 0
+	comp.Sprite.Get(pheromoneEntry).Scale = 0.5
+	comp.Sprite.Get(pheromoneEntry).Opacity = 0.5
+
+	return pheromone
 }
