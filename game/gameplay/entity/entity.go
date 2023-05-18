@@ -28,6 +28,7 @@ type CreateCellOptions struct {
 	Activity comp.Activity
 
 	PheromoneCooldown float64
+	PheromoneChance   float64
 }
 
 func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.Entity {
@@ -72,8 +73,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	comp.Sprite.Get(cellEntry).Scale = 1
 	comp.Sprite.Get(cellEntry).Opacity = 1
 
-	comp.Cell.Get(cellEntry).PheromoneCooldown = options.PheromoneCooldown
-	comp.Cell.Get(cellEntry).PheromoneTimer = options.PheromoneCooldown
+	comp.Cell.Get(cellEntry).PheromoneChance = options.PheromoneChance
 
 	return cell
 }

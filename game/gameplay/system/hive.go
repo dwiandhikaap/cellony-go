@@ -51,12 +51,12 @@ func HiveSystem(ecs *ecs.ECS) {
 		cellColor.B = hiveColor.B
 
 		op := &ent.CreateCellOptions{
-			X:                 cx,
-			Y:                 cy,
-			Speed:             50,
-			Color:             cellColor,
-			HiveID:            entry.Entity(),
-			PheromoneCooldown: 3,
+			X:               cx,
+			Y:               cy,
+			Speed:           50,
+			Color:           cellColor,
+			HiveID:          entry.Entity(),
+			PheromoneChance: 1.0 / (60 * 3),
 		}
 
 		for i := 0; i < hive.SpawnCount; i++ {

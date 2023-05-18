@@ -71,17 +71,37 @@ func CellAISystem(ecs *ecs.ECS) {
 
 			// Update internal cell clock
 			cellData := comp.Cell.Get(cellEntry)
-			cellData.PheromoneTimer = cellData.PheromoneTimer - (1.0 / 60)
-			if cellData.PheromoneTimer < 0 {
-				ent.CreatePheromoneEntity(ecs.World, &ent.CreatePheromoneOptions{
-					X:         pos.X,
-					Y:         pos.Y,
-					Activity:  activity,
-					HiveID:    comp.Parent.Get(cellEntry).Id,
-					Intensity: 1,
+			if rand.Float64() < cellData.PheromoneChance {
+				// check nearby pheromones
+				pheromoneQuery := donburi.NewQuery(
+					filter.Contains(comp.Pheromone),
+				)
+
+				nearbyIntensity := 0.0
+				pheromoneQuery.Each(ecs.World, func(pheromoneEntry *donburi.Entry) {
+					if nearbyIntensity > 2 {
+						return
+					}
+
+					pheromone := comp.Pheromone.Get(pheromoneEntry)
+					pheromonePos := comp.Position.Get(pheromoneEntry)
+
+					if pheromone.HiveID == comp.Parent.Get(cellEntry).Id &&
+						math.Abs(pheromonePos.X-pos.X) < 25 &&
+						math.Abs(pheromonePos.Y-pos.Y) < 25 {
+						nearbyIntensity += pheromone.Intensity
+					}
 				})
 
-				cellData.PheromoneTimer = cellData.PheromoneCooldown
+				if nearbyIntensity <= 2 {
+					ent.CreatePheromoneEntity(ecs.World, &ent.CreatePheromoneOptions{
+						X:         pos.X,
+						Y:         pos.Y,
+						Activity:  activity,
+						HiveID:    comp.Parent.Get(cellEntry).Id,
+						Intensity: 1,
+					})
+				}
 			}
 		})
 	})

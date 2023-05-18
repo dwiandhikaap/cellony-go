@@ -86,8 +86,7 @@ type PheromoneData struct {
 }
 
 type CellData struct {
-	PheromoneTimer    float64
-	PheromoneCooldown float64
+	PheromoneChance float64
 }
 
 // Components
