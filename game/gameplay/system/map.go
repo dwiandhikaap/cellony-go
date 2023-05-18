@@ -72,6 +72,7 @@ func MapSystem(ecs *ecs.ECS) {
 				index := int(val * float32(len(wallImgs)-1))
 
 				if val <= 0 {
+					op.Blend = ebiten.BlendClear
 					image.Img.DrawImage(deadWall, op)
 				} else if grid.TypeMask[i][j] {
 					image.Img.DrawImage(wallImgs[index], op)

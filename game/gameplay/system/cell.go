@@ -123,8 +123,7 @@ func CellCollisionSystem(ecs *ecs.ECS) {
 func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 	query := donburi.NewQuery(
 		filter.And(
-			filter.Contains(comp.Position),
-			filter.Contains(comp.Sprite),
+			filter.Contains(comp.Cell),
 		),
 	)
 
@@ -149,12 +148,14 @@ func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 
 			scale := sprite.Scale
 			opacity := sprite.Opacity
+			spriteWidth := float64(sprite.Sprite.Bounds().Dx()) * scale
+			spriteHeight := float64(sprite.Sprite.Bounds().Dy()) * scale
 
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Scale(scale, scale)
 			op.ColorScale.ScaleAlpha(float32(opacity))
 
-			op = cam.GetTranslation(op, position.X, position.Y)
+			op = cam.GetTranslation(op, position.X-spriteWidth/2, position.Y-spriteHeight/2)
 			screen.DrawImage(sprite.Sprite, op)
 		})
 	}

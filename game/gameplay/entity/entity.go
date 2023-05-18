@@ -86,7 +86,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 
 	comp.Hive.Get(hiveEntry).SpawnCooldown = 1
 	comp.Hive.Get(hiveEntry).SpawnCountdown = 0
-	comp.Hive.Get(hiveEntry).SpawnCount = 3
+	comp.Hive.Get(hiveEntry).SpawnCount = 30
 
 	x := rand.Float64() * float64(config.Game.Width)
 	y := rand.Float64() * float64(config.Game.Height)
