@@ -9,7 +9,7 @@ import (
 
 const (
 	LayerBackground ecs.LayerID = iota
-	LayerGame
+	LayerHUD
 )
 
 func addSystem(ecs *ecs.ECS) {
@@ -19,6 +19,7 @@ func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(system.HiveSystem)
 	ecs.AddSystem(system.MapSystem)
 	ecs.AddSystem(system.PheromoneSystem)
+	ecs.AddSystem(system.HUDSystem)
 	//ecs.AddSystem(system.MapDestroySystem)
 
 	camera.AddCameraRenderer(system.BackgroundRenderer)
@@ -28,4 +29,5 @@ func addSystem(ecs *ecs.ECS) {
 	camera.AddCameraRenderer(system.HiveRenderer)
 
 	ecs.AddRenderer(LayerBackground, camera.CameraRenderer)
+	ecs.AddRenderer(LayerHUD, system.HUDRenderer)
 }

@@ -1,6 +1,8 @@
 package comp
 
 import (
+	"cellony/game/menu"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 )
@@ -89,6 +91,10 @@ type CellData struct {
 	PheromoneChance float64
 }
 
+type HUDData struct {
+	Menu *menu.Menu
+}
+
 // Components
 var Position = donburi.NewComponentType[PositionData]()
 var Velocity = donburi.NewComponentType[VelocityData]()
@@ -104,3 +110,4 @@ var Hive = donburi.NewComponentType[HiveData]()
 var Parent = donburi.NewComponentType[ParentData]()
 var Pheromone = donburi.NewComponentType[PheromoneData]()
 var Cell = donburi.NewComponentType[CellData]()
+var HUD = donburi.NewComponentType[HUDData]()

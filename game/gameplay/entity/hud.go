@@ -1,7 +1,9 @@
-package menu
+package ent
 
 import (
 	"cellony/game/assets"
+	comp "cellony/game/gameplay/component"
+	"cellony/game/menu"
 	"cellony/game/scene"
 	"image/color"
 	"os"
@@ -11,14 +13,20 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/nfnt/resize"
+	"github.com/yohamta/donburi"
 )
 
-type Menu struct {
-	UI           *ebitenui.UI
-	SceneManager *scene.SceneManager
+func CreateHUDEntity(world donburi.World, sceneManager *scene.SceneManager) donburi.Entity {
+	hud := world.Create(comp.HUD)
+
+	hudEntry := world.Entry(hud)
+	hudData := comp.HUD.Get(hudEntry)
+	hudData.Menu = createHUDMenu(sceneManager)
+
+	return hud
 }
 
-func NewMainMenu(sceneManager *scene.SceneManager) *Menu {
+func createHUDMenu(sceneManager *scene.SceneManager) *menu.Menu {
 	titleImage := assets.AssetsInstance.Textures["brand-wide.png"]
 
 	titleImageResized := resize.Resize(0, 100, *titleImage, resize.Lanczos3)
@@ -123,27 +131,10 @@ func NewMainMenu(sceneManager *scene.SceneManager) *Menu {
 		Container: rootContainer,
 	}
 
-	menu := &Menu{
-		UI:           &ui,
+	return &menu.Menu{
 		SceneManager: sceneManager,
+		UI:           &ui,
 	}
-
-	return menu
-}
-
-func (m *Menu) Update() error {
-	m.UI.Update()
-	return nil
-}
-
-func (m *Menu) Draw(screen *ebiten.Image) {
-	m.UI.Draw(screen)
-}
-
-func (m *Menu) Open() {
-}
-
-func (m *Menu) Close() {
 }
 
 // idle rgba(0, 171, 52, 0.8)

@@ -25,7 +25,7 @@ func CreateGame() *Game {
 	}
 
 	menuScene := menu.CreateMenuScene(&sceneManager)
-	gameplayScene := gameplay.CreateWorldScene()
+	gameplayScene := gameplay.CreateWorldScene(&sceneManager)
 
 	sceneManager.Scenes = append(sceneManager.Scenes, menuScene)
 	sceneManager.Scenes = append(sceneManager.Scenes, gameplayScene)

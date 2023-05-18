@@ -12,7 +12,7 @@ type MenuScene struct {
 
 func CreateMenuScene(sceneManager *scene.SceneManager) *MenuScene {
 	return &MenuScene{
-		menu: NewMenu(sceneManager),
+		menu: NewMainMenu(sceneManager),
 	}
 }
 

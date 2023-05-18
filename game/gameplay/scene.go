@@ -4,6 +4,7 @@ import (
 	"cellony/game/gameplay/camera"
 	comp "cellony/game/gameplay/component"
 	ent "cellony/game/gameplay/entity"
+	"cellony/game/scene"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
@@ -15,7 +16,7 @@ type WorldScene struct {
 	ecs *ecslib.ECS
 }
 
-func CreateWorldScene() *WorldScene {
+func CreateWorldScene(sceneManager *scene.SceneManager) *WorldScene {
 	world := donburi.NewWorld()
 
 	s := WorldScene{
@@ -26,6 +27,8 @@ func CreateWorldScene() *WorldScene {
 	ent.CreateMapEntity(s.ecs.World)
 	playerHive := ent.CreateHiveEntity(s.ecs.World)
 	ent.CreateHiveEntity(s.ecs.World)
+
+	ent.CreateHUDEntity(s.ecs.World, sceneManager)
 
 	playerHiveEntry := world.Entry(playerHive)
 	playerCamEntry := world.Entry(playerCam)
