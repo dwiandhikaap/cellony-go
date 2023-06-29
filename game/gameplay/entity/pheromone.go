@@ -62,7 +62,7 @@ func CreatePheromoneEntity(world donburi.World, options *CreatePheromoneOptions)
 	}
 
 	comp.Sprite.Get(pheromoneEntry).Sprite = pheroImage
-	comp.Sprite.Get(pheromoneEntry).Z = 0
+	comp.Sprite.Get(pheromoneEntry).Z = -2
 	comp.Sprite.Get(pheromoneEntry).Scale = 0.5
 	comp.Sprite.Get(pheromoneEntry).Opacity = 0.5
 

@@ -147,7 +147,7 @@ func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		),
 	)
 
-	for zIndex := uint8(0); zIndex < 8; zIndex++ {
+	for zIndex := int32(0); zIndex < 8; zIndex++ {
 		query.Each(ecs.World, func(entry *donburi.Entry) {
 			sprite := comp.Sprite.Get(entry)
 

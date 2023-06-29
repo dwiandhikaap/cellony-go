@@ -9,7 +9,7 @@
             "path": "assets/image/brand-logo.png"
         },
         {
-            "name": "circle64",
+            "name": "circle8",
             "path": "assets/image/circle-64.png",
             "size": {
                 "width": 8,
@@ -17,7 +17,7 @@
             }
         },
         {
-            "name": "square64",
+            "name": "square8",
             "path": "assets/image/square-64.png",
             "size": {
                 "width": 8,
@@ -25,12 +25,24 @@
             }
         },
         {
-            "name": "triangle64",
+            "name": "triangle8",
             "path": "assets/image/triangle-64.png",
             "size": {
                 "width": 8,
                 "height": 8
             }
+        },
+        {
+            "name": "circle64",
+            "path": "assets/image/circle-64.png"
+        },
+        {
+            "name": "square64",
+            "path": "assets/image/square-64.png"
+        },
+        {
+            "name": "triangle64",
+            "path": "assets/image/triangle-64.png"
         },
         {
             "name": "phero",

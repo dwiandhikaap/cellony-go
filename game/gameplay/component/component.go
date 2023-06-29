@@ -40,7 +40,7 @@ type ClockData struct {
 
 type SpriteData struct {
 	Sprite  *ebiten.Image
-	Z       uint8
+	Z       int32
 	Scale   float64
 	Opacity float64
 }
@@ -105,6 +105,10 @@ type HUDData struct {
 	Menu *menu.Menu
 }
 
+type PathNodeData struct {
+	Radius float64
+}
+
 // Components
 var Position = donburi.NewComponentType[PositionData]()
 var Velocity = donburi.NewComponentType[VelocityData]()
@@ -121,3 +125,4 @@ var Parent = donburi.NewComponentType[ParentData]()
 var Pheromone = donburi.NewComponentType[PheromoneData]()
 var Cell = donburi.NewComponentType[CellData]()
 var HUD = donburi.NewComponentType[HUDData]()
+var PathNode = donburi.NewComponentType[PathNodeData]()

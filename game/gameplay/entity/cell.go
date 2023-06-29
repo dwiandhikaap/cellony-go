@@ -53,7 +53,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 		assetsKey = "triangle"
 	}
 
-	rawSpriteKey := assetsKey + "64"
+	rawSpriteKey := assetsKey + "8"
 	assetsKey = fmt.Sprintf("%s%d", assetsKey, options.HiveID)
 
 	cellImage := assets.AssetsInstance.Sprites[assetsKey]
@@ -75,7 +75,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	}
 
 	comp.Sprite.Get(cellEntry).Sprite = cellImage
-	comp.Sprite.Get(cellEntry).Z = 1
+	comp.Sprite.Get(cellEntry).Z = 0
 	comp.Sprite.Get(cellEntry).Scale = 1
 	comp.Sprite.Get(cellEntry).Opacity = 1
 
