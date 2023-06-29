@@ -4,6 +4,7 @@ import (
 	"cellony/game/config"
 	comp "cellony/game/gameplay/component"
 	ent "cellony/game/gameplay/entity"
+	"cellony/game/util"
 	"image"
 	"image/color"
 
@@ -50,16 +51,20 @@ func HiveSystem(ecs *ecs.ECS) {
 		cellColor.G = hiveColor.G
 		cellColor.B = hiveColor.B
 
-		op := &ent.CreateCellOptions{
-			X:               cx,
-			Y:               cy,
-			Speed:           50,
-			Color:           cellColor,
-			HiveID:          entry.Entity(),
-			PheromoneChance: 1.0 / (60 * 3),
-		}
+		class := []comp.CellClass{comp.Gatherer, comp.Soldier, comp.Wanderer}
 
 		for i := 0; i < hive.SpawnCount; i++ {
+			op := &ent.CreateCellOptions{
+				X:               cx,
+				Y:               cy,
+				Speed:           50,
+				Color:           cellColor,
+				HiveID:          entry.Entity(),
+				Health:          300,
+				Class:           util.Pick(class),
+				PheromoneChance: 1.0 / (60 * 3),
+			}
+
 			ent.CreateCellEntity(ecs.World, op)
 		}
 	})

@@ -2,6 +2,7 @@ package util
 
 import (
 	"math"
+	"math/rand"
 	"runtime"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -87,4 +88,8 @@ func FilePathToName(path string) string {
 	}
 
 	return name
+}
+
+func Pick[T any](x []T) T {
+	return x[rand.Intn(len(x))]
 }

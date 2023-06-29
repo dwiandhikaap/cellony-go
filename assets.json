@@ -17,6 +17,22 @@
             }
         },
         {
+            "name": "square64",
+            "path": "assets/image/square-64.png",
+            "size": {
+                "width": 8,
+                "height": 8
+            }
+        },
+        {
+            "name": "triangle64",
+            "path": "assets/image/triangle-64.png",
+            "size": {
+                "width": 8,
+                "height": 8
+            }
+        },
+        {
             "name": "phero",
             "path": "assets/image/phero.png"
         },

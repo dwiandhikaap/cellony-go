@@ -4,8 +4,10 @@ import (
 	comp "cellony/game/gameplay/component"
 	"cellony/game/menu"
 	"cellony/game/scene"
+	"image/color"
 
 	"github.com/ebitenui/ebitenui"
+	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/yohamta/donburi"
 )
@@ -26,6 +28,21 @@ func createHUDMenu(sceneManager *scene.SceneManager) *menu.Menu {
 	ui := ebitenui.UI{
 		Container: rootContainer,
 	}
+
+	lowerMenuBackground := image.NewNineSliceColor(color.RGBA{255, 255, 255, 255})
+
+	lowerMenuContainer := widget.NewGraphic(
+		widget.GraphicOpts.ImageNineSlice(lowerMenuBackground),
+		widget.GraphicOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(
+				widget.RowLayoutData{
+					Position: widget.RowLayoutPositionCenter,
+				},
+			),
+		),
+	)
+
+	ui.Container.AddChild(lowerMenuContainer)
 
 	return &menu.Menu{
 		SceneManager: sceneManager,

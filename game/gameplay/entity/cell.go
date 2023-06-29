@@ -21,6 +21,9 @@ type CreateCellOptions struct {
 	HiveID   donburi.Entity
 	Activity comp.Activity
 
+	Health float64
+	Class  comp.CellClass
+
 	PheromoneCooldown float64
 	PheromoneChance   float64
 }
@@ -43,7 +46,16 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	comp.Velocity.Get(cellEntry).Y = math.Sin(angle) * comp.Speed.Get(cellEntry).Speed
 
 	// assets key = "circle{hiveID}"
-	assetsKey := fmt.Sprintf("circle%d", options.HiveID)
+	assetsKey := "circle"
+	if options.Class == comp.Gatherer {
+		assetsKey = "square"
+	} else if options.Class == comp.Soldier {
+		assetsKey = "triangle"
+	}
+
+	rawSpriteKey := assetsKey + "64"
+	assetsKey = fmt.Sprintf("%s%d", assetsKey, options.HiveID)
+
 	cellImage := assets.AssetsInstance.Sprites[assetsKey]
 	if assets.AssetsInstance.Sprites[assetsKey] == nil {
 		cellImage = ebiten.NewImage(8, 8)
@@ -57,7 +69,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 		tintOp.ColorScale.SetB(float32(b) / 65535)
 		tintOp.ColorScale.SetA(1)
 
-		cellImage.DrawImage(assets.AssetsInstance.Sprites["circle64"], tintOp)
+		cellImage.DrawImage(assets.AssetsInstance.Sprites[rawSpriteKey], tintOp)
 
 		assets.AssetsInstance.Sprites[assetsKey] = cellImage
 	}
@@ -67,6 +79,8 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	comp.Sprite.Get(cellEntry).Scale = 1
 	comp.Sprite.Get(cellEntry).Opacity = 1
 
+	comp.Cell.Get(cellEntry).Health = options.Health
+	comp.Cell.Get(cellEntry).Class = options.Class
 	comp.Cell.Get(cellEntry).PheromoneChance = options.PheromoneChance
 
 	return cell

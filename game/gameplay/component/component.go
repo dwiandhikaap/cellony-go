@@ -87,7 +87,17 @@ type PheromoneData struct {
 	Activity     Activity
 }
 
+type CellClass uint8
+
+const (
+	Wanderer CellClass = iota
+	Gatherer
+	Soldier
+)
+
 type CellData struct {
+	Class           CellClass
+	Health          float64
 	PheromoneChance float64
 }
 
