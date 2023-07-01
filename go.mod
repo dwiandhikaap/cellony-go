@@ -35,6 +35,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/quasilyte/gmath v0.0.0-20221217210116-fba37a2e15c7 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
+	github.com/s0rg/quadtree v1.0.2 // indirect
 	golang.org/x/exp v0.0.0-20190731235908-ec7cb31e5a56 // indirect
 	golang.org/x/mobile v0.0.0-20230427221453-e8d11dd0ba41 // indirect
 	golang.org/x/sync v0.1.0 // indirect

@@ -21,6 +21,7 @@ func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(system.MapSystem)
 	ecs.AddSystem(system.PheromoneSystem)
 	ecs.AddSystem(system.HUDSystem)
+	ecs.AddSystem(system.CellQTreeSystem)
 	//ecs.AddSystem(system.MapDestroySystem)
 
 	camera.AddCameraRenderer(system.BackgroundRenderer)

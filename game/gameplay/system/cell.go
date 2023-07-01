@@ -10,6 +10,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	camera "github.com/melonfunction/ebiten-camera"
+	"github.com/s0rg/quadtree"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
@@ -139,6 +140,33 @@ func CellCollisionSystem(ecs *ecs.ECS) {
 			}
 		})
 	})
+}
+
+func CellQTreeSystem(ecs *ecs.ECS) {
+	tree := quadtree.New[donburi.Entity](config.Game.Width, config.Game.Height, 4)
+
+	query := donburi.NewQuery(
+		filter.Contains(comp.Cell),
+	)
+
+	entCount := 0
+	query.Each(ecs.World, func(entry *donburi.Entry) {
+		position := comp.Position.Get(entry)
+		ok := tree.Add(position.X, position.Y, 0, 0, entry.Entity())
+
+		if !ok {
+			println("failed to add to tree")
+			entry.Remove()
+		}
+
+		entCount++
+	})
+
+	//cx, cy := cam.CursorWorldPosition()
+
+	/* tree.KNearest(float64(cx), float64(cy), 60, 1000, func(x, y, w, h float64, entity donburi.Entity) {
+		ecs.World.Remove(entity)
+	}) */
 }
 
 func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
