@@ -144,3 +144,8 @@ func CameraSystem(ecs *ecs.ECS) {
 		cam.SetPosition(finalX, finalY)
 	})
 }
+
+func CursorWorldPosition() (float64, float64) {
+	cx, cy := ebiten.CursorPosition()
+	return GlobalCamera.GetWorldCoords(float64(cx), float64(cy))
+}

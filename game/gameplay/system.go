@@ -14,12 +14,12 @@ const (
 
 func addSystem(ecs *ecs.ECS) {
 	ecs.AddSystem(camera.CameraSystem)
+	ecs.AddSystem(system.PathNodeSpawningSystem)
 	ecs.AddSystem(system.CellAISystem)
 	//ecs.AddSystem(system.CellCollisionSystem)
 	ecs.AddSystem(system.HiveSystem)
 	ecs.AddSystem(system.MapSystem)
 	ecs.AddSystem(system.PheromoneSystem)
-	ecs.AddSystem(system.PathNodeSystem)
 	ecs.AddSystem(system.HUDSystem)
 	//ecs.AddSystem(system.MapDestroySystem)
 

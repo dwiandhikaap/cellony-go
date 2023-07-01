@@ -10,6 +10,10 @@ import (
 	"github.com/nfnt/resize"
 )
 
+type Number interface {
+	int | uint | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64
+}
+
 func Clamp(a float64, min float64, max float64) float64 {
 	if a < min {
 		return min
@@ -49,6 +53,10 @@ func RangeInterpolate(a float64, aMin float64, aMax float64, bMin float64, bMax 
 
 func Distance(aX float64, aY float64, bX float64, bY float64) float64 {
 	return math.Sqrt((aX-bX)*(aX-bX) + (aY-bY)*(aY-bY))
+}
+
+func DistanceSquared[T Number](aX T, aY T, bX T, bY T) T {
+	return (aX-bX)*(aX-bX) + (aY-bY)*(aY-bY)
 }
 
 func GetCircleLatticeArea(x float64, y float64, radius float64) [][]int {

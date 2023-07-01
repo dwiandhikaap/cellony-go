@@ -4,6 +4,7 @@ import (
 	"cellony/game/config"
 	comp "cellony/game/gameplay/component"
 	ent "cellony/game/gameplay/entity"
+	bitmask "cellony/lib/bit"
 	"math"
 	"math/rand"
 
@@ -134,7 +135,7 @@ func CellCollisionSystem(ecs *ecs.ECS) {
 				cellEntry.Remove()
 
 				grid.Grid[x][y] -= 0.1
-				grid.DirtyMask[x][y] = true
+				grid.Mask[x][y] = bitmask.SetBit(grid.Mask[x][y], comp.DirtyMask)
 			}
 		})
 	})

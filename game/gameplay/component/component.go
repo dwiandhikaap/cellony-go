@@ -53,10 +53,15 @@ type IndicesData struct {
 	Indices []uint16
 }
 
+const (
+	DirtyMask uint8 = 1 << iota
+	WallMask        // if set, this tile is a wall, else it's a food
+	MarkedMask
+)
+
 type GridData struct {
-	Grid      [][]float32 // doubles down as grid health
-	DirtyMask [][]bool
-	TypeMask  [][]bool // true if wall, false if food
+	Grid [][]float32 // doubles down as grid health
+	Mask [][]uint8
 }
 
 type ImageData struct {
@@ -105,10 +110,6 @@ type HUDData struct {
 	Menu *menu.Menu
 }
 
-type PathNodeData struct {
-	Radius float64
-}
-
 // Components
 var Position = donburi.NewComponentType[PositionData]()
 var Velocity = donburi.NewComponentType[VelocityData]()
@@ -125,4 +126,3 @@ var Parent = donburi.NewComponentType[ParentData]()
 var Pheromone = donburi.NewComponentType[PheromoneData]()
 var Cell = donburi.NewComponentType[CellData]()
 var HUD = donburi.NewComponentType[HUDData]()
-var PathNode = donburi.NewComponentType[PathNodeData]()

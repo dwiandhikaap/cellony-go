@@ -10,6 +10,7 @@ import (
 	comp "cellony/game/gameplay/component"
 	"cellony/game/graphics"
 	"cellony/game/util"
+	bitmask "cellony/lib/bit"
 )
 
 func CreateHiveEntity(world donburi.World) donburi.Entity {
@@ -53,7 +54,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 
 	mapQuery.Each(world, func(entry *donburi.Entry) {
 		grid := comp.Grid.Get(entry).Grid
-		dirtyMask := comp.Grid.Get(entry).DirtyMask
+		mask := comp.Grid.Get(entry).Mask
 
 		// Outer circle, reduce by 0.1 each steps
 		for i := 0; i < 15; i++ {
@@ -65,7 +66,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 				yIndex := int(index[1])
 
 				grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])-delta, 0.0, 1.0))
-				dirtyMask[xIndex][yIndex] = true
+				mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 			}
 		}
 	})
