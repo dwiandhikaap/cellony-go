@@ -11,7 +11,7 @@ import (
 )
 
 type Number interface {
-	int | uint | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64
+	int | uint | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64
 }
 
 func Clamp(a float64, min float64, max float64) float64 {
@@ -71,6 +71,57 @@ func GetCircleLatticeArea(x float64, y float64, radius float64) [][]int {
 	}
 
 	return lattice
+}
+
+func ForEachSquareLatticeArea(x int, y int, radius int, f func(int, int)) {
+	for i := int(x - radius); i <= int(x+radius); i++ {
+		for j := int(y - radius); j <= int(y+radius); j++ {
+			f(i, j)
+		}
+	}
+}
+
+func ForEachLatticeLine(x1 int, y1 int, x2 int, y2 int, f func(int, int)) {
+	dx := x2 - x1
+	dy := y2 - y1
+
+	if dx == 0 {
+		for j := y1; j <= y2; j++ {
+			f(x1, j)
+		}
+		return
+	}
+
+	if dy == 0 {
+		for i := x1; i <= x2; i++ {
+			f(i, y1)
+		}
+		return
+	}
+
+	if math.Abs(float64(dx)) > math.Abs(float64(dy)) {
+		for i := x1; i <= x2; i++ {
+			j := int(float64(dy)/float64(dx)*float64(i-x1) + float64(y1))
+			f(i, j)
+		}
+	} else {
+		for j := y1; j <= y2; j++ {
+			i := int(float64(dx)/float64(dy)*float64(j-y1) + float64(x1))
+			f(i, j)
+		}
+	}
+}
+
+func GetNormalizedLine(x1 float64, y1 float64, x2 float64, y2 float64) (float64, float64) {
+	dx := x2 - x1
+	dy := y2 - y1
+	mag := math.Sqrt(dx*dx + dy*dy)
+	return dx / mag, dy / mag
+}
+
+func GetNormalizedVector(x float64, y float64) (float64, float64) {
+	mag := math.Sqrt(x*x + y*y)
+	return x / mag, y / mag
 }
 
 func ResizeImage(img *ebiten.Image, w int, h int) *ebiten.Image {

@@ -1,30 +1,34 @@
 package ent
 
 import (
-	"math/rand"
-
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 
-	"cellony/game/config"
-	comp "cellony/game/gameplay/component"
-	"cellony/game/graphics"
-	"cellony/game/util"
-	bitmask "cellony/lib/bit"
+	"autocell/game/config"
+	comp "autocell/game/gameplay/component"
+	"autocell/game/graphics"
+	"autocell/game/util"
 )
 
-func CreateHiveEntity(world donburi.World) donburi.Entity {
+func CreateHiveEntity(world donburi.World, x, y float64, isPlayer bool) donburi.Entity {
 	hive := world.Create(comp.Position, comp.Vertices, comp.Indices, comp.Color, comp.Hive)
 	hiveEntry := world.Entry(hive)
 
 	radius := 64.0
 
-	comp.Hive.Get(hiveEntry).SpawnCooldown = 1
+	comp.Hive.Get(hiveEntry).SpawnCooldown = 5
 	comp.Hive.Get(hiveEntry).SpawnCountdown = 0
-	comp.Hive.Get(hiveEntry).SpawnCount = 1000
+	comp.Hive.Get(hiveEntry).SpawnCount = 10
 
-	x := rand.Float64() * float64(config.Game.Width)
-	y := rand.Float64() * float64(config.Game.Height)
+	comp.Hive.Get(hiveEntry).IsPlayer = isPlayer
+	comp.Hive.Get(hiveEntry).Resource = 0
+
+	comp.Hive.Get(hiveEntry).WandererOdd = 1
+	comp.Hive.Get(hiveEntry).SoldierOdd = 0
+	comp.Hive.Get(hiveEntry).WorkerOdd = 0
+
+	//x := rand.Float64() * float64(config.Game.Width)
+	//y := rand.Float64() * float64(config.Game.Height)
 
 	// padding
 	xPadding := 0.2 * config.Game.Width
@@ -54,7 +58,7 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 
 	mapQuery.Each(world, func(entry *donburi.Entry) {
 		grid := comp.Grid.Get(entry).Grid
-		mask := comp.Grid.Get(entry).Mask
+		//mask := comp.Grid.Get(entry).Mask
 
 		// Outer circle, reduce by 0.1 each steps
 		for i := 0; i < 15; i++ {
@@ -65,8 +69,12 @@ func CreateHiveEntity(world donburi.World) donburi.Entity {
 				xIndex := int(index[0])
 				yIndex := int(index[1])
 
+				if xIndex < 0 || xIndex >= len(grid) || yIndex < 0 || yIndex >= len(grid[0]) {
+					continue
+				}
+
 				grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])-delta, 0.0, 1.0))
-				mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
+				//mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 			}
 		}
 	})

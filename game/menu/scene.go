@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"cellony/game/scene"
+	"autocell/game/scene"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )

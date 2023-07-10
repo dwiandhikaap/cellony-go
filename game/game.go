@@ -6,12 +6,14 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
-	"cellony/game/config"
-	"cellony/game/gameplay"
-	input "cellony/game/input"
-	"cellony/game/menu"
-	"cellony/game/scene"
+	"autocell/game/config"
+	"autocell/game/gameplay"
+	input "autocell/game/input"
+	"autocell/game/menu"
+	"autocell/game/scene"
 )
+
+var DebugCallbacks = []func(screen *ebiten.Image){}
 
 type Game struct {
 	sceneManager *scene.SceneManager
@@ -48,8 +50,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.sceneManager.Draw(screen)
 	fps := fmt.Sprintf("FPS: %0.2f", ebiten.ActualFPS())
 	ebitenutil.DebugPrint(screen, fps)
+
+	for _, callback := range DebugCallbacks {
+		callback(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return int(config.Video.Width), int(config.Video.Height)
+}
+
+func AddDebugCallback(callback func(screen *ebiten.Image)) {
+	DebugCallbacks = append(DebugCallbacks, callback)
 }

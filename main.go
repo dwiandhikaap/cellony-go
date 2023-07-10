@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 
-	"cellony/game"
-	"cellony/game/assets"
-	"cellony/game/config"
-	"cellony/game/util"
-	"cellony/generator"
+	"autocell/game"
+	"autocell/game/assets"
+	"autocell/game/config"
+	"autocell/game/util"
+	"autocell/generator"
 
 	"runtime/pprof"
 
@@ -51,7 +51,7 @@ func main() {
 	}
 
 	ebiten.SetWindowSize(int(config.Video.Width), int(config.Video.Height))
-	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowTitle("Autocell")
 
 	gpu := util.GpuInfo()
 

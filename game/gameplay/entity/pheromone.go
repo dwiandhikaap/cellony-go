@@ -7,8 +7,8 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 
-	"cellony/game/assets"
-	comp "cellony/game/gameplay/component"
+	"autocell/game/assets"
+	comp "autocell/game/gameplay/component"
 )
 
 type CreatePheromoneOptions struct {
@@ -62,7 +62,7 @@ func CreatePheromoneEntity(world donburi.World, options *CreatePheromoneOptions)
 	}
 
 	comp.Sprite.Get(pheromoneEntry).Sprite = pheroImage
-	comp.Sprite.Get(pheromoneEntry).Z = -2
+	comp.Sprite.Get(pheromoneEntry).Z = -1
 	comp.Sprite.Get(pheromoneEntry).Scale = 0.5
 	comp.Sprite.Get(pheromoneEntry).Opacity = 0.5
 

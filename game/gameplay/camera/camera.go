@@ -1,8 +1,8 @@
 package camera
 
 import (
-	"cellony/game/config"
-	"cellony/game/util"
+	"autocell/game/config"
+	"autocell/game/util"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -85,23 +85,25 @@ func CameraSystem(ecs *ecs.ECS) {
 		finalY := cam.Y
 		finalZoom := cam.Scale
 
-		_, scrollAmount := ebiten.Wheel()
-		if scrollAmount > 0 {
-			finalZoom = math.Min(cam.Scale*1.1, maxZoom)
+		if !ebiten.IsKeyPressed(ebiten.KeyControl) {
+			_, scrollAmount := ebiten.Wheel()
+			if scrollAmount > 0 {
+				finalZoom = math.Min(cam.Scale*1.1, maxZoom)
 
-			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
-			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
+				dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
+				dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
 
-			finalX += dx * 20
-			finalY += dy * 20
-		} else if scrollAmount < 0 {
-			finalZoom = math.Max(cam.Scale*0.9, minZoom)
+				finalX += dx * 20
+				finalY += dy * 20
+			} else if scrollAmount < 0 {
+				finalZoom = math.Max(cam.Scale*0.9, minZoom)
 
-			dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
-			dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
+				dx := (float64(cx) - (config.Video.Width / 2)) / config.Video.Width * multiplier / finalZoom
+				dy := (float64(cy) - (config.Video.Height / 2)) / config.Video.Height * multiplier / finalZoom
 
-			finalX -= dx * 20
-			finalY -= dy * 20
+				finalX -= dx * 20
+				finalY -= dy * 20
+			}
 		}
 		cam.SetZoom(finalZoom)
 

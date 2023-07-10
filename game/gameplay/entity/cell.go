@@ -9,8 +9,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
-	"cellony/game/assets"
-	comp "cellony/game/gameplay/component"
+	"autocell/game/assets"
+	comp "autocell/game/gameplay/component"
 )
 
 type CreateCellOptions struct {
@@ -47,7 +47,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 
 	// assets key = "circle{hiveID}"
 	assetsKey := "circle"
-	if options.Class == comp.Gatherer {
+	if options.Class == comp.Worker {
 		assetsKey = "square"
 	} else if options.Class == comp.Soldier {
 		assetsKey = "triangle"
@@ -82,6 +82,7 @@ func CreateCellEntity(world donburi.World, options *CreateCellOptions) donburi.E
 	comp.Cell.Get(cellEntry).Health = options.Health
 	comp.Cell.Get(cellEntry).Class = options.Class
 	comp.Cell.Get(cellEntry).PheromoneChance = options.PheromoneChance
+	comp.Cell.Get(cellEntry).ResourceCarried = 0
 
 	return cell
 }

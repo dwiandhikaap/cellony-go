@@ -1,8 +1,8 @@
 package menu
 
 import (
-	"cellony/game/assets"
-	"cellony/game/scene"
+	"autocell/game/assets"
+	"autocell/game/scene"
 	"image/color"
 	"os"
 
@@ -16,6 +16,7 @@ import (
 type Menu struct {
 	UI           *ebitenui.UI
 	SceneManager *scene.SceneManager
+	ElmTexts     map[string]*widget.Text
 }
 
 func NewMainMenu(sceneManager *scene.SceneManager) *Menu {

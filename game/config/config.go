@@ -8,9 +8,11 @@ import (
 )
 
 type game struct {
-	Width    float64 `json:"width"`
-	Height   float64 `json:"height"`
-	TileSize float64 `json:"tileSize"`
+	Width         float64 `json:"width"`
+	Height        float64 `json:"height"`
+	TileSize      float64 `json:"tileSize"`
+	WallThreshold float64 `json:"wallThreshold"`
+	FoodThreshold float64 `json:"foodThreshold"`
 }
 
 type control struct {

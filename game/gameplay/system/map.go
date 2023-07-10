@@ -1,10 +1,10 @@
 package system
 
 import (
-	"cellony/game/assets"
-	"cellony/game/config"
-	comp "cellony/game/gameplay/component"
-	bitmask "cellony/lib/bit"
+	"autocell/game/assets"
+	"autocell/game/config"
+	comp "autocell/game/gameplay/component"
+	bitmask "autocell/lib/bit"
 	"image/color"
 	"math"
 	"math/rand"
@@ -117,6 +117,7 @@ func MapSystem(ecs *ecs.ECS) {
 					op.ColorScale.SetA(0.4 + float32(1+(math.Sin(float64(time.Now().UnixMilli())/256)))/10)
 
 					if val <= 0 {
+						op.Blend = ebiten.BlendClear
 						image.Img.DrawImage(highlight, op)
 					} else if isWall {
 						image.Img.DrawImage(wallImgs[index], op)

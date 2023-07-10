@@ -2,3 +2,5 @@ build
 result.out
 profiling/*
 unused
+*.zip
+.DS_STORE

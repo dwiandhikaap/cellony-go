@@ -1,10 +1,10 @@
 package system
 
 import (
-	"cellony/game/config"
-	comp "cellony/game/gameplay/component"
-	ent "cellony/game/gameplay/entity"
-	bitmask "cellony/lib/bit"
+	"autocell/game/config"
+	comp "autocell/game/gameplay/component"
+	ent "autocell/game/gameplay/entity"
+	bitmask "autocell/lib/bit"
 	"math"
 	"math/rand"
 
@@ -15,6 +15,8 @@ import (
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
 )
+
+var cellQuadTree *quadtree.Tree[donburi.Entity] = quadtree.New[donburi.Entity](config.Game.Width, config.Game.Height, 4)
 
 func CellAISystem(ecs *ecs.ECS) {
 	cellQuery := donburi.NewQuery(
@@ -143,7 +145,8 @@ func CellCollisionSystem(ecs *ecs.ECS) {
 }
 
 func CellQTreeSystem(ecs *ecs.ECS) {
-	tree := quadtree.New[donburi.Entity](config.Game.Width, config.Game.Height, 4)
+	cellQuadTree = quadtree.New[donburi.Entity](config.Game.Width, config.Game.Height, 4)
+	//cellQuadTree.Del(config.Game.Width, config.Game.Height)
 
 	query := donburi.NewQuery(
 		filter.Contains(comp.Cell),
@@ -152,7 +155,7 @@ func CellQTreeSystem(ecs *ecs.ECS) {
 	entCount := 0
 	query.Each(ecs.World, func(entry *donburi.Entry) {
 		position := comp.Position.Get(entry)
-		ok := tree.Add(position.X, position.Y, 0, 0, entry.Entity())
+		ok := cellQuadTree.Add(position.X, position.Y, 0, 0, entry.Entity())
 
 		if !ok {
 			println("failed to add to tree")
@@ -162,11 +165,7 @@ func CellQTreeSystem(ecs *ecs.ECS) {
 		entCount++
 	})
 
-	//cx, cy := cam.CursorWorldPosition()
-
-	/* tree.KNearest(float64(cx), float64(cy), 60, 1000, func(x, y, w, h float64, entity donburi.Entity) {
-		ecs.World.Remove(entity)
-	}) */
+	//println("Cell count:", entCount)
 }
 
 func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
@@ -208,4 +207,17 @@ func CellRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 			screen.DrawImage(sprite.Sprite, op)
 		})
 	}
+}
+
+func CellHealthSystem(ecs *ecs.ECS) {
+	cellQuery := donburi.NewQuery(
+		filter.Contains(comp.Cell),
+	)
+
+	cellQuery.Each(ecs.World, func(e *donburi.Entry) {
+		cellData := comp.Cell.Get(e)
+		if cellData.Health <= 0 {
+			e.Remove()
+		}
+	})
 }

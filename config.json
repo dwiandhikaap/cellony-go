@@ -2,7 +2,9 @@
   "game": {
     "width": 2560,
     "height": 1440,
-    "tileSize": 10
+    "tileSize": 10,
+    "wallThreshold": 0.45,
+    "foodThreshold": 0.8
   },
   "control": {
     "camSpeed": 10,

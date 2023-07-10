@@ -1,7 +1,7 @@
 package system
 
 import (
-	comp "cellony/game/gameplay/component"
+	comp "autocell/game/gameplay/component"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	camera "github.com/melonfunction/ebiten-camera"
@@ -26,7 +26,7 @@ func BackgroundSpriteRenderer(ecs *ecs.ECS, cam *camera.Camera) {
 		zIndexes[sprite.Z] = true
 	})
 
-	for zIndex := int32(-1); zIndex < 0; zIndex++ {
+	for zIndex := int32(-2); zIndex < 0; zIndex++ {
 		query.Each(ecs.World, func(entry *donburi.Entry) {
 			sprite := comp.Sprite.Get(entry)
 

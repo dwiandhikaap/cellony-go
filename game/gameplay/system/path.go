@@ -1,18 +1,6 @@
 package system
 
-import (
-	"cellony/game/config"
-	camera "cellony/game/gameplay/camera"
-	comp "cellony/game/gameplay/component"
-	"cellony/game/util"
-	bitmask "cellony/lib/bit"
-
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/ecs"
-	"github.com/yohamta/donburi/filter"
-)
-
+/*
 var lastNodeX = -1
 var lastNodeY = -1
 
@@ -55,6 +43,10 @@ func PathNodeSpawningSystem(ecs *ecs.ECS) {
 						continue
 					}
 
+					if grid[xIndex][yIndex] <= 0 {
+						continue
+					}
+
 					mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.MarkedMask)
 					mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 				}
@@ -74,8 +66,6 @@ func PathNodeSpawningSystem(ecs *ecs.ECS) {
 		mapQuery := donburi.NewQuery(
 			filter.Contains(comp.Grid),
 		)
-
-		println("Clearing marked tiles")
 
 		mapQuery.Each(ecs.World, func(entry *donburi.Entry) {
 			grid := comp.Grid.Get(entry).Grid
@@ -110,3 +100,4 @@ func PathNodeSpawningSystem(ecs *ecs.ECS) {
 
 	lastNodeX, lastNodeY = -1, -1
 }
+*/

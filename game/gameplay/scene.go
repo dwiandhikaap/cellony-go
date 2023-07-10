@@ -1,10 +1,10 @@
 package gameplay
 
 import (
-	"cellony/game/gameplay/camera"
-	comp "cellony/game/gameplay/component"
-	ent "cellony/game/gameplay/entity"
-	"cellony/game/scene"
+	"autocell/game/gameplay/camera"
+	comp "autocell/game/gameplay/component"
+	ent "autocell/game/gameplay/entity"
+	"autocell/game/scene"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
@@ -24,11 +24,12 @@ func CreateWorldScene(sceneManager *scene.SceneManager) *WorldScene {
 	}
 
 	playerCam := camera.CreateCameraEntity(s.ecs.World)
+	ent.CreateGlobalStateEntity(s.ecs, sceneManager)
 	ent.CreateMapEntity(s.ecs.World)
-	playerHive := ent.CreateHiveEntity(s.ecs.World)
-	ent.CreateHiveEntity(s.ecs.World)
+	playerHive := ent.CreateHiveEntity(s.ecs.World, 1280, 720, true)
+	//ent.CreateHiveEntity(s.ecs.World, 960, 720, false)
 
-	ent.CreateHUDEntity(s.ecs.World, sceneManager)
+	ent.CreateHUDEntity(s.ecs, sceneManager)
 
 	playerHiveEntry := world.Entry(playerHive)
 	playerCamEntry := world.Entry(playerCam)

@@ -1,15 +1,15 @@
 package system
 
 import (
-	"cellony/game/config"
-	comp "cellony/game/gameplay/component"
-	ent "cellony/game/gameplay/entity"
-	"cellony/game/util"
+	"autocell/game/config"
+	comp "autocell/game/gameplay/component"
+	ent "autocell/game/gameplay/entity"
 	"image"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	camera "github.com/melonfunction/ebiten-camera"
+	"github.com/mroth/weightedrand/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/filter"
@@ -51,17 +51,30 @@ func HiveSystem(ecs *ecs.ECS) {
 		cellColor.G = hiveColor.G
 		cellColor.B = hiveColor.B
 
-		class := []comp.CellClass{comp.Gatherer, comp.Soldier, comp.Wanderer}
+		class, _ := weightedrand.NewChooser[comp.CellClass](
+			weightedrand.NewChoice(comp.Wanderer, hive.WandererOdd),
+			weightedrand.NewChoice(comp.Worker, hive.WorkerOdd),
+			weightedrand.NewChoice(comp.Soldier, hive.SoldierOdd),
+		)
+
+		// get globalstate
+		speed := 30
+		globalState, ok := donburi.NewQuery(
+			filter.Contains(comp.GlobalState),
+		).First(ecs.World)
+		if ok {
+			speed = comp.GlobalState.Get(globalState).CellSpeed
+		}
 
 		for i := 0; i < hive.SpawnCount; i++ {
 			op := &ent.CreateCellOptions{
 				X:               cx,
 				Y:               cy,
-				Speed:           50,
+				Speed:           float64(speed),
 				Color:           cellColor,
 				HiveID:          entry.Entity(),
 				Health:          300,
-				Class:           util.Pick(class),
+				Class:           class.Pick(),
 				PheromoneChance: 1.0 / (60 * 3),
 			}
 

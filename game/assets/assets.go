@@ -1,8 +1,8 @@
 package assets
 
 import (
-	"cellony/game/config"
-	"cellony/game/util"
+	"autocell/game/config"
+	"autocell/game/util"
 	"encoding/json"
 	"image"
 	"io"
