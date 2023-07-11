@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"autocell/game/assets"
 	"autocell/game/gameplay/camera"
 	comp "autocell/game/gameplay/component"
 	ent "autocell/game/gameplay/entity"
@@ -40,6 +41,10 @@ func CreateWorldScene(sceneManager *scene.SceneManager) *WorldScene {
 	playerCamData.Cam.Y = playerHivePos.Y
 
 	addSystem(s.ecs)
+
+	// play audio
+	bgm := assets.AssetsInstance.Audio["bgm"]
+	bgm.Play()
 
 	return &s
 }

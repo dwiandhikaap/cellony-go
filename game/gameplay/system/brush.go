@@ -8,7 +8,9 @@ import (
 	ent "autocell/game/gameplay/entity"
 	"autocell/game/util"
 	bitmask "autocell/lib/bit"
+	"log"
 	"math"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	camlib "github.com/melonfunction/ebiten-camera"
@@ -91,19 +93,31 @@ func BrushSystem(ecs *ecs.ECS) {
 						hudY1 := 640
 						hudY2 := 800
 
+						hudX3 := 0
+						hudX4 := 350
+						hudY3 := 50
+						hudY4 := 220
+
 						if (mouseCamX) > hudX1 && (mouseCamX) < hudX2 && (mouseCamY) > hudY1 && (mouseCamY) < hudY2 {
 							continue
 						}
 
+						if (mouseCamX) > hudX3 && (mouseCamX) < hudX4 && (mouseCamY) > hudY3 && (mouseCamY) < hudY4 {
+							continue
+						}
+
 						if brushType == comp.BrushWall {
+							playBrushSfx()
 							mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.WallMask)
 							grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])+delta, 0.0, 1.0))
 							mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 						} else if brushType == comp.BrushFood {
+							playBrushSfx()
 							mask[xIndex][yIndex] = bitmask.ClearBit(mask[xIndex][yIndex], comp.WallMask)
 							grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])+delta, 0.0, 1.0))
 							mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 						} else if brushType == comp.BrushEraser {
+							playBrushSfx()
 							grid[xIndex][yIndex] = float32(util.Clamp(float64(grid[xIndex][yIndex])-delta, 0.0, 1.0))
 							mask[xIndex][yIndex] = bitmask.SetBit(mask[xIndex][yIndex], comp.DirtyMask)
 						}
@@ -129,7 +143,6 @@ func BrushSystem(ecs *ecs.ECS) {
 				Intensity: 1,
 			})
 		}
-
 		lastNodeX, lastNodeY = cx, cy
 		return
 	}
@@ -173,4 +186,25 @@ func BrushRenderer(ecs *ecs.ECS, cam *camlib.Camera) {
 	op.GeoM.Translate(float64(cursorX)/cam.Scale-(float64(brushRadius)), float64(cursorY)/cam.Scale-(float64(brushRadius)))
 
 	cam.Surface.DrawImage(resizedEbitenImg, op)
+}
+
+var lastSeekTime int64 = 0
+
+func playBrushSfx() {
+	now := time.Now().UnixMilli()
+
+	if now-lastSeekTime < 200 {
+		return
+	}
+
+	lastSeekTime = now
+
+	err := assets.AssetsInstance.Audio["brush"].Seek(time.Millisecond * 300)
+
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	assets.AssetsInstance.Audio["brush"].Play()
 }

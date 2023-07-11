@@ -150,6 +150,14 @@
         }
     ],
     "audio": [
+        {
+            "name": "bgm",
+            "path": "assets/audio/bgm.mp3"
+        },
+        {
+            "name": "brush",
+            "path": "assets/audio/brush.mp3"
+        }
     ],
     "fonts": [
         "assets/font/FallingSkyCondensed.otf"

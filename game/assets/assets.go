@@ -9,6 +9,8 @@ import (
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/nfnt/resize"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -18,6 +20,7 @@ import (
 type Assets struct {
 	Sprites  map[string]*ebiten.Image
 	Textures map[string]*image.Image
+	Audio    map[string]*audio.Player
 
 	fonts     map[string]map[float64]*font.Face
 	_rawFonts map[string]*sfnt.Font
@@ -66,9 +69,15 @@ func InitializeAssets() error {
 		return err
 	}
 
+	audios, err := loadAudio(&assetsJson)
+	if err != nil {
+		return err
+	}
+
 	AssetsInstance = &Assets{
 		Sprites:  sprites,
 		Textures: textures,
+		Audio:    audios,
 
 		fonts:     make(map[string]map[float64]*font.Face),
 		_rawFonts: rawFonts,
@@ -154,4 +163,33 @@ func generateFontFace(rawFont *sfnt.Font, fontSize float64) (*font.Face, error) 
 	})
 
 	return &face, err
+}
+
+func loadAudio(assets *assetsJson) (map[string]*audio.Player, error) {
+	audioData := make(map[string]*audio.Player)
+	audioContext := audio.NewContext(44100)
+
+	for _, audioFile := range assets.Audio {
+		f, err := os.Open(audioFile.Path)
+		if err != nil {
+			println("Warning: " + audioFile.Path + " failed to load")
+			continue
+		}
+		//defer f.Close()
+
+		audioIoReader := io.Reader(f)
+
+		asdasd, err := mp3.DecodeWithSampleRate(44100, audioIoReader)
+		if err != nil {
+			return nil, err
+		}
+		audioPlayer, err := audioContext.NewPlayer(asdasd)
+		if err != nil {
+			return nil, err
+		}
+
+		audioData[audioFile.Name] = audioPlayer
+	}
+
+	return audioData, nil
 }
